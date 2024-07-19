@@ -2,22 +2,19 @@ using Oxygen
 using HTTP
 using JSON3
 
-@post "/form" function(req)
-    return "this"
-end
+include("pclean.jl")
 
-struct ToPCleanSentence
-    sentence::String
-end
+const N_PARTICLES = 5
+const GRAMMAR = """ start: "Sequential Monte Carlo is " ("good" | "bad") """
+const URL = "http://34.122.30.137:8888/infer"
 
-
-
-N_PARTICLES = 5
-GRAMMAR = """ start: "Sequential Monte Carlo is " ("good" | "bad") """
-URL = "http://34.122.30.137:8888/infer"
+TRACE = load_database()
 
 @post "/sentence-to-pclean" function(request)
-    data = JSON3.read(request.body)
+    data = json(request)
+    if !("sentence" in keys(data))
+        println("error here...")
+    end
     sentence = data.sentence
 
     genparse_params = Dict(
@@ -33,12 +30,18 @@ URL = "http://34.122.30.137:8888/infer"
     json_data = JSON3.write(genparse_params)
 
     response = HTTP.post(URL, ["Content-Type" => "application/json"], json_data)
-    response = JSON3.read(response.body)
+    response = json(response)
 
     response.posterior
 end
 
 @post "/run-pclean" function(request)
+    data = json(request)
+    query_pclean(data.pclean)
 end
 
-serve(port=8888, host="0.0.0.0")
+function main()
+    serve(port=8888, host="0.0.0.0")
+end
+
+main()
