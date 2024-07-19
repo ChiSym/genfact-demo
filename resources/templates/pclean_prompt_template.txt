@@ -1,0 +1,44 @@
+Write Julia code to query a PClean table of records about doctors based on the given input sentence.
+
+In general, your output should look like pairs of lines:
+
+```julia
+blah_key = PClean.resolve_dot_expression(trace.model, :Obs, :blah_col)
+row_trace[blah_key] = "Value of Blah as expressed in the sentence"
+```
+
+The dataset has just four columns to query:
+
+- :name (the doctor's full name, first and last)
+- :city (the city where the doctor practices)
+- :address (the doctor's office address)
+- :specialty (the doctor's specialty)
+
+Please generate code to query all values specified in the sentence. Output the Julia code directly with no preamble or commentary. Write just two lines per column.
+
+Input: Loved visiting Dr. Kay Ryan's neurology office at 256 Overflow St! No wait time at all. #Baltimore
+Output: ```julia
+name_key = PClean.resolve_dot_expression(trace.model, :Obs, :name)
+row_trace[name_key] = "Kay Ryan"
+address_key = PClean.resolve_dot_expression(trace.model, :Obs, :address)
+row_trace[address_key] = "256 Overflow St"
+specialty_key = PClean.resolve_dot_expression(trace.model, :Obs, :specialty)
+row_trace[specialty_key] = "neurology"
+city_key = PClean.resolve_dot_expression(trace.model, :Obs, :city)
+row_trace[city_key] = "Baltimore"
+```
+
+Input: Dr. Pat Rogers's orthopedics office screwed us! Took our money and Kay gave us three minutes tops. #BaltimoreSucks
+Output: ```julia
+name_key = PClean.resolve_dot_expression(trace.model, :Obs, :name)
+row_trace[name_key] = "Pat Rogers"
+specialty_key = PClean.resolve_dot_expression(trace.model, :Obs, :specialty)
+row_trace[specialty_key] = "orthopedics"
+city_key = PClean.resolve_dot_expression(trace.model, :Obs, :city)
+row_trace[city_key] = "Baltimore"
+```
+
+In other words, we query all values given in the sentence: The doctor's name, their office address, their specialty, and the city. If one of these is missing, we do not query on it.
+
+Input: {{sentence}}
+Output:

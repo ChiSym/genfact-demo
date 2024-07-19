@@ -1,0 +1,19 @@
+start: prefix julia_code suffix
+prefix: "<|start_header_id|>assistant<|end_header_id|>" NL* FREE_TEXT? NL+ CODE_FENCE JULIA? NL
+suffix: NL CODE_FENCE
+julia_code: add_to_trace (NL+ add_to_trace)+
+
+FREE_TEXT: /[a-zA-Z0-9.,-?!;: ]+/
+CODE_FENCE: "```"
+JULIA: "julia"
+WS: " "
+NL: "\n"
+STRING: /"[a-zA-Z0-9. ]*"/
+
+add_to_trace: get_key NL set_key_in_trace
+# slightly overly restrictive but good enough 
+get_key: trace_key_identifier WS* "=" WS* "PClean.resolve_dot_expression(trace.model, :Obs, " column_symbol ")"
+# column_symbol: /:[a-z][a-z_]+/
+column_symbol: ":" ("name" | "address" | "specialty" | "city")
+set_key_in_trace: "row_trace[" trace_key_identifier "]" WS* "=" WS* STRING
+trace_key_identifier: /[a-z][a-z_]+/
