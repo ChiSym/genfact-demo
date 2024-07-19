@@ -11,22 +11,6 @@ struct ToPCleanSentence
 end
 
 
-#=
-request = {
-        "prompt": prompt,
-        "method": "smc-standard",
-        "n_particles": 10,
-        "lark_grammar": grammar,
-        "proposal_name": "character",
-        "proposal_args": {},
-        "max_tokens": 100,
-        "temperature": 1.
-        }
-    headers = {
-        "Content-type": "application/json",
-        "Accept": "application/json"
-        }
-=#
 
 PROMPT = ""
 N_PARTICLES = 5
@@ -52,7 +36,15 @@ URL = "http://34.122.30.137:8888/infer"
     # Send the POST request
     response = HTTP.post(URL, ["Content-Type" => "application/json"], json_data)
 
-    return String(response.body)
+    posterior = JSON.parse(String(response.body))["posterior"]
+
+    # post process posterior
+
+
+end
+
+@post "/run-pclean" function(req)
+
 end
 
 serve(port=8888, host="0.0.0.0")
