@@ -81,8 +81,9 @@ module GeneratePClean
             symbol = resolve_dot_expr_match.captures[2]
 
             # Find the matching "set value" code
+            varname_regex = Regex("\Q$varname\E")
             set_value_match = match(
-                r"row_trace\[$(re.escape(varname))\] = \"([a-zA-Z0-9 ]+)\"", 
+                r"row_trace\[$(varname_regex)\] = \"([a-zA-Z0-9 ]+)\"", 
                 inference,
                 resolve_dot_expr_match.stop + 1,
             )
