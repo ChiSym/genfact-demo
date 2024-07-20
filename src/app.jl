@@ -1,21 +1,8 @@
-using Oxygen
-using HTTP
-using JSON3
-
-include("pclean.jl")
-
-const N_PARTICLES = 5
-const GRAMMAR = """ start: "Sequential Monte Carlo is " ("good" | "bad") """
-const URL = "http://34.122.30.137:8888/infer"
-
-TRACE = load_database()
-
 @post "/sentence-to-pclean" function(request)
     data = json(request)
-    if !("sentence" in keys(data))
-        println("error here...")
-    end
     sentence = data.sentence
+
+    N_PARTICLES = 5
 
     genparse_params = Dict(
         "prompt" => "", # add sentence to prompt
@@ -36,12 +23,30 @@ TRACE = load_database()
 end
 
 @post "/run-pclean" function(request)
-    data = json(request)
-    query_pclean(data.pclean)
+    observations = try
+        data = json(request)
+        if !("observations" in keys(data))
+            return HTTP.Response(400, "observations not specified")
+        end
+        data.observations
+    catch e
+        return HTTP.Response(500, "Server error")
+    end
+
+    query = try
+        generate_query(observations)
+    catch e
+        return HTTP.Response(500, "generate_query: $(string(e))")
+    end
+
+    try
+        execute_query(query)
+    catch e
+        return HTTP.Response(500, "Server error: $(string(e))")
+    end
 end
 
 function main()
+    load_database(RESOURCES)
     serve(port=8888, host="0.0.0.0")
 end
-
-main()
