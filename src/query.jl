@@ -1,13 +1,4 @@
 function generate_query(data)
-    data = Dict(
-        "SCHOOL" => "ALBANY MEDICAL COLLEGE OF UNION UNIVERSITY",
-        "FIRST" => "STEVEN",
-        "LAST" => "GILMAN",
-        "C2Z3" => "CA-170",
-        "ADDR" => "429 N 21ST ST",
-        "ADDR2" => "",
-        "LEGAL" => "SPIRIT PHYSICIAN SERVICES INC",
-    )
     row_trace = Dict{PClean.VertexID, Any}()
     row_trace[PClean.resolve_dot_expression(TRACE.model, :Obs, :(p.school.name))] = data["SCHOOL"]
     row_trace[PClean.resolve_dot_expression(TRACE.model, :Obs, :(p.first))] = data["FIRST"]
@@ -20,18 +11,13 @@ function generate_query(data)
 end
 
 function execute_query(row_trace::PClean.RowTrace)
-  ROW_ID = 31415926
-  # println(typeof(TRACE))
-  # obs = TRACE.tables[:Obs].observations
-  # obs[ROW_ID] = row_trace
+  row_id = 31415926
+  obs = TRACE.tables[:Obs].observations
+  obs[row_id] = row_trace
 
-  # specialty_samples = String[]
-  # last_name_samples = String[]
-  # physician_ids = Symbol[]
-
-  # for _ in 1:10
-  #   PClean.run_smc!(trace, :Obs, row_id, PClean.InferenceConfig(10,10))
-  # end
+  for _ in 1:10
+    PClean.run_smc!(TRACE, :Obs, row_id, PClean.InferenceConfig(10,10))
+  end
 
   return 0
 end

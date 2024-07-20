@@ -34,16 +34,25 @@ end
     end
 
     query = try
+        observations = Dict(
+            "SCHOOL" => "ALBANY MEDICAL COLLEGE OF UNION UNIVERSITY",
+            "FIRST" => "STEVEN",
+            "LAST" => "GILMAN",
+            "C2Z3" => "CA-170",
+            "ADDR" => "429 N 21ST ST",
+            "ADDR2" => "",
+            "LEGAL" => "SPIRIT PHYSICIAN SERVICES INC",
+        )
         generate_query(observations)
     catch e
         return HTTP.Response(500, "generate_query: $(string(e))")
     end
 
-    try
+    # try
         execute_query(query)
-    catch e
-        return HTTP.Response(500, "Server error: $(string(e))")
-    end
+    # catch e
+        # return HTTP.Response(500, "Server error: $(string(e))")
+    # end
 end
 
 function main()

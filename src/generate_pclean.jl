@@ -4,8 +4,8 @@ const NEWLINE = "\n"
 
 GRAMMAR = String(read("$RESOURCES/pclean_grammar.lark"))
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
-format_pclean_prompt = mustache("$RESOURCES/templates/pclean_prompt_template.txt", from_file=true) 
-format_pclean_code = mustache("$RESOURCES/templates/pclean_template.jl")
+format_pclean_prompt = mustache_("$RESOURCES/templates/pclean_prompt_template.txt", from_file=true) 
+format_pclean_code = mustache_("$RESOURCES/templates/pclean_template.jl")
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
@@ -20,7 +20,7 @@ function extract_code_from_response(text::String)::String
     start += length(NEWLINE)
 
     # The code is assumed to lie between the first fence and last fence
-    end_ = findlast(text, FENCE).start - 1
+    end_ = findlast(FENCE, text).start - 1
     result = strip(SubString(text, start, end_))
     return result 
 end

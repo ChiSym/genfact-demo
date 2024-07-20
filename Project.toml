@@ -6,6 +6,7 @@ version = "0.1.0"
 [deps]
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+MIMEs = "6c6e2e6c-3030-632d-7369-2d6c69616d65"
 Mustache = "ffc61752-8dc7-55ee-8c37-f3e9cdd09e70"
 Oxygen = "df9a0d86-3283-4920-82dc-4555fc0d1d8b"
 PClean = "ad4d8a49-b7a6-42f4-9958-4de6b66581ba"

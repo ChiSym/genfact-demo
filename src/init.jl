@@ -1,5 +1,7 @@
 function load_database(dir)
+    cities = deserialize("$dir/database/cities.jls")
     possibilities = deserialize("$dir/database/possibilities.jls")
+
     SPECIALITIES = possibilities["Primary specialty"]
     CREDENTIALS = possibilities["Credential"]
     # SCHOOLS = possibilities["Medical school name"]

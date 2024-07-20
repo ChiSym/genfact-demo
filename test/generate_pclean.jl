@@ -1,4 +1,4 @@
-function test_extracting_code_works()
+@testset "Extracting Code" begin 
     # Test to confirm it works as intended
     text = """<|start_header_id|>assistant<|end_header_id|>
   
@@ -16,6 +16,6 @@ function test_extracting_code_works()
     city_key = PClean.resolve_dot_expression(trace.model, :Obs, :city)
     row_trace[city_key] = "Baltimore\""""
 
-    result = GeneratePClean.extract_code_from_response(text)
+    result = GenFactDemo.extract_code_from_response(text)
     @test strip(result) == expected_code
 end
