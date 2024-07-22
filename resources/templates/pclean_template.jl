@@ -12,7 +12,7 @@ for _ in 1:{{N}}
     # Perform a Particle Gibbs MCMC move to change our current sample of the row
     PClean.run_smc!(trace, :Obs, row_id, PClean.InferenceConfig(1, 10))
     # Accumulate the sample
-    push!(samples, trace.tables[:Obs].rows[row_id][br_idx]
+    push!(samples, trace.tables[:Obs].rows[row_id][br_idx])
 end
 
 countmap(samples)
