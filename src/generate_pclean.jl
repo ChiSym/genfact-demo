@@ -2,10 +2,14 @@ const FENCE = "```"
 const JULIA = "julia"
 const NEWLINE = "\n"
 
-GRAMMAR = String(read("$RESOURCES/pclean_grammar.lark"))
+# Thanks to https://en.wikibooks.org/wiki/Introducing_Julia/Working_with_text_files
+const GRAMMAR = open("./resources/pclean_grammar.lark") do file
+    read(file, String)
+end
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
-format_pclean_prompt = mustache_("$RESOURCES/templates/pclean_prompt_template.txt", from_file=true) 
-format_pclean_code = mustache_("$RESOURCES/templates/pclean_template.jl")
+format_pclean_prompt = mustache_("./resources/templates/pclean_prompt_template.txt", from_file=true) 
+format_pclean_code = mustache_("./resources/templates/pclean_template.jl")
+
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
