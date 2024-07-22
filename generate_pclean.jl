@@ -5,6 +5,7 @@ module GeneratePClean
     const JULIA = "julia"
     const NEWLINE = "\n"
 
+    # Thanks to https://en.wikibooks.org/wiki/Introducing_Julia/Working_with_text_files
     const GRAMMAR = open("./resources/pclean_grammar.lark") do file
         read(file, String)
     end
