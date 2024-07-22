@@ -5,7 +5,9 @@ module GeneratePClean
     const JULIA = "julia"
     const NEWLINE = "\n"
 
-    GRAMMAR = read("./resources/pclean_grammar.lark") 
+    const GRAMMAR = open("./resources/pclean_grammar.lark") do file
+        read(file, String)
+    end
     # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
     format_pclean_prompt = mustache("./resources/templates/pclean_prompt_template.txt", from_file=true) 
     format_pclean_code = mustache("./resources/templates/pclean_template.jl")
