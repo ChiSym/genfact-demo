@@ -55,6 +55,28 @@ function get_aggregate_likelihoods(posterior::Dict{String, AbstractFloat})::Dict
 end
 
 
+@doc """Normalize a raw JSON object string into a standard form.
+
+This parses the string as an object, sorts by keys, then re-serializes it to eliminate variation in whitespace.
+"""
+function normalize_json_object(string::String)::String
+    result = JSON3.write(Dict(String(k) => v for (k, v) in sort(collect(JSON3.read(string)), by=t -> String(t[1]))))
+    return result
+end
+
+
+@doc """Convert a raw-JSON posterior into a normalized-JSON posterior."""
+function aggregate_identical_json(posterior::Dict{String, AbstractFloat})::Dict{String, AbstractFloat}
+    result = Dict()
+    for (inference, likelihood) in posterior
+        # Parse, sort keys, and rewrite so that things look proper
+        normalized = normalize_json_object(inference)
+        get!(result, normalized, 0.0)
+        result[normalized] += likelihood
+    end
+    return sort_posterior(result)
+end
+
 
 resolve_dot_expr_re = r"([a-z_]+_key) = PClean\.resolve_dot_expression\(trace\.model, :Obs, :\(([a-zA-Z_.]+)\)\)"
 _CLASS_NAMES::Dict{String, String} = Dict(
