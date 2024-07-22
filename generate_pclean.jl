@@ -15,19 +15,19 @@ module GeneratePClean
 
     @doc """Extract code from the code block in a chatty Genparse generation."""
     function extract_code_from_response(text::String)::String
-        start = findfirst(FENCE, text).stop + 1
+        start = String.findfirst(FENCE, text).stop + 1
 
         # Fence may or may not be marked as Julia code
-        if startswith(SubString(text, start), JULIA)
-            start += length(JULIA)
+        if String.startswith(String.SubString(text, start), JULIA)
+            start += String.length(JULIA)
         end
         # Fence may or may not be marked as Julia code
-        @assert startswith(SubString(text, start), NEWLINE)
-        start += length(NEWLINE)
+        @assert String.startswith(String.SubString(text, start), NEWLINE)
+        start += String.length(NEWLINE)
 
         # The code is assumed to lie between the first fence and last fence
-        end_ = findlast(text, FENCE).start - 1
-        result = strip(SubString(text, start, end_))
+        end_ = String.findlast(text, FENCE).start - 1
+        result = String.strip(String.SubString(text, start, end_))
         return result 
     end
 
