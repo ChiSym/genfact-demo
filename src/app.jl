@@ -46,7 +46,7 @@ end
         # demo.
         as_object = Dict(String(key) => value for (key, value) in JSON3.read(inference) if value != "")
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
-        with_correct_names = Dict(get(column_names_map, key, key) for (key, value) in as_object)
+        with_correct_names = Dict(get(column_names_map, key, key) => value for (key, value) in as_object)
 
         annotated_text = """$(make_style_tag(map_attribute_to_color(as_object)))
 <p>$(annotate_input_text(sentence, as_object))</p>"""
