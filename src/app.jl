@@ -28,9 +28,7 @@ end
     stringkey_posterior = Dict(String(k) => v for (k, v) in response.posterior)
     println("Prompt: $(genparse_params["prompt"])")
     println("Posterior: $stringkey_posterior")
-    try
-        clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
-    catch e
+    clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
         
     # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
     # jac: This is temporary until we update the grammar/prompt
