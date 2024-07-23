@@ -1,0 +1,14 @@
+start: prefix json suffix
+prefix: "<|start_header_id|>assistant<|end_header_id|>" NL* FREE_TEXT? NL+ CODE_FENCE JSON_TAG? NL
+suffix: NL CODE_FENCE
+json: "{" NL? WS* kv_pair ("," NL? WS* kv_pair)* NL? WS* "}"
+kv_pair: COLUMN WS* ":" WS* STRING
+
+FREE_TEXT: /[a-zA-Z0-9.,-?!;:' ]+/
+CODE_FENCE: "```"
+JSON_TAG: "json"
+WS: " "
+NL: "\n"
+STRING: /"[a-zA-Z0-9-.,'& ]*"/
+# dropped for now: "city"
+COLUMN: "\"" ("first_name" | "last_name" | "address" | "address2" | "specialty" | "c2z3" | "legal_name") "\""
