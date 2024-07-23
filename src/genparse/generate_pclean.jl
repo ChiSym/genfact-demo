@@ -80,18 +80,18 @@ end
 
 resolve_dot_expr_re = r"([a-z_]+_key) = PClean\.resolve_dot_expression\(trace\.model, :Obs, :\(([a-zA-Z_.]+)\)\)"
 _CLASS_NAMES::Dict{String, String} = Dict(
-    "p.first" => "extracted_firstname",
-    "p.last" => "extracted_lastname",
-    "p.specialty" => "extracted_specialty",
-    "a.addr" => "extracted_address",
-    "a.addr2" => "extracted_address2",
-    "a.c2z3" => "extracted_c2z3",
-    "a.city" => "extracted_city",
-    "a.legal_name" => "extracted_legalofficename",
+    "first_name" => "extracted_firstname",
+    "last_name" => "extracted_lastname",
+    "specialty" => "extracted_specialty",
+    "address" => "extracted_address",
+    "address2" => "extracted_address2",
+    "c2z3" => "extracted_c2z3",
+    "city" => "extracted_city",
+    "legal_name" => "extracted_legalofficename",
 )
 @doc """Resolve the given Julia symbol to a CSS class name."""
 function get_class_name(symbol)
-    return _CLASS_NAMES.get(symbol, "")
+    return get(_CLASS_NAMES, symbol, "")
 end
 
 @doc """Extract a mapping from PClean column symbols to the values assigned."""
@@ -125,15 +125,40 @@ COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
 
 @doc """Annotate the given input using HTML span tags."""
 function annotate_input_text(input_text::String, variables::Dict{String, String})::String
-    # TODO how to escape text as HTML in Julia?
-    # result = escape(input_text)
-    result = input_text
-    # Look for assignments in the generated PClean code,
-    # determine the values of those assignments,
-    # then highlight the corresponding values in the HTML result.
+    # jac: Hacky way to escape input text as HTML
+    result = Mustache.render(mt"{{:s}}", s=input_text)
+
     for (symbol, value) in variables
         class_name = get_class_name(symbol)
-        result = replace(result, value_pattern => s"<span class=\"$class_name\">$value_string</span>")
+        if class_name != ""
+            html_escaped_value = Mustache.render(mt"{{:s}}", s=value)
+            value_pattern = Regex("\\Q$html_escaped_value\\E")
+            result = replace(result, value_pattern => "<span class=\"$class_name\">$html_escaped_value</span>")
+        end
     end
+
+    return result
+end
+
+function map_attribute_to_color(variables::Dict{String, String})::Dict{String, String}
+    result = Dict()
+    for ((symbol, value), color) in zip(variables, COLORS)
+        result[symbol] = color
+    end
+    return result
+end
+
+function make_style_tag(attribute_to_color::Dict{String, String})::String
+    csslines::Vector{String} = []
+    for (attribute, color) in attribute_to_color
+        class_name = get_class_name(attribute)
+        if class_name != ""
+            push!(csslines, ".$class_name { color: $(color); }")
+        end
+    end
+
+    result = """<style>
+$(join(csslines, "\n"))
+</style>"""
     return result
 end
