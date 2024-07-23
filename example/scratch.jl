@@ -26,7 +26,7 @@ function postprocess(response)
             "first"=> pclean_request["first_name"],
             "last" => pclean_request["last_name"],
             # "specialty" => pclean_request["specialty"],
-            "addr" => pclean_request["addr"],
+            # "addr" => pclean_request["addr"],
             "legal_name" => pclean_request["legal_name"]
         )
     )
@@ -39,13 +39,13 @@ function endpoint2(request)
     JSON3.read(response.body)
 end
 
-sentence_1 = "Steven Gilman's diagnostic radiology office (Spirit Physician Services Inc) at 429 N 21ST St (CA-170) is terrible!" 
-sentence_2 = "Steven Gilman's diagnostic radiology office (Spirit Physician Services Inc) at 429 N 21ST St (CA-170) is terrible!" 
+sentence_1 = "Steven Gilman's diagnostic radiology office (Spirit Physician Services Inc) at is terrible!" 
+# sentence_2 = "Steven Gilman's diagnostic radiology office (Spirit Physician Services Inc) at 429 N 21ST St (CA-170) is terrible!" 
 
 # 429 N 21ST ST
-# response1 = endpoint1(sentence)
-# pclean_request = postprocess(response1)
-# response2 = endpoint2(pclean_request)
+response1 = endpoint1(sentence_1)
+pclean_request = postprocess(response1)
+response2 = endpoint2(pclean_request)
 
 include("viz.jl")
 

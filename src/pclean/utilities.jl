@@ -1,3 +1,8 @@
+function setup_table(model)
+    table = deserialize("$RESOURCES/database/physician.jls")
+    return PClean.PCleanTrace(model, table)
+end
+
 function histograms(results)
     physicians = Dict{Symbol,Int}()
     businesses = Dict{Symbol,Int}()

@@ -71,7 +71,7 @@ end
     iterations = 1000
     table = deserialize("$RESOURCES/database/physician.jls")
     trace = PClean.PCleanTrace(MODEL, table)
-    query = generate_query(trace, data.observations)
+    query = generate_query(MODEL, data.observations)
     trace, query, iterations
     # catch e
         # return HTTP.Response(500, "Server error: $(string(e))")

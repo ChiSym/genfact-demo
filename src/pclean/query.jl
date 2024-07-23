@@ -11,14 +11,15 @@ const VALID_ATTRIBUTES = Dict(
     "legal_name" => :(a.legal_name),
 )
 
-function generate_query(trace::PClean.PCleanTrace, data)
+function generate_query(model::PClean.PCleanModel, data)
     row_trace = Dict{PClean.VertexID,Any}()
     for (key, value) in data
-        !(key in keys(VALID_ATTRIBUTES)) && ArgumentError(
+        key = string(key)
+        !(key in keys(VALID_ATTRIBUTES)) && throw(ArgumentError(
             "Query $key is not a valid attribute. The valid attributes: $(collect(keys(VALID_ATTRIBUTES)))",
-        )
-        row_trace[PClean.resolve_dot_expression(trace.model, :Obs, VALID_ATTRIBUTES[string(key)])] =
-            value
+        ))
+        attr = VALID_ATTRIBUTES[key]
+        row_trace[PClean.resolve_dot_expression(model, :Obs, attr)] = value
     end
     return row_trace
 end

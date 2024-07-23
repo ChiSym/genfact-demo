@@ -1,4 +1,4 @@
-# module GenFactDemo
+module GenFactDemo
 using Oxygen
 using Mustache
 using JSON3
@@ -14,6 +14,5 @@ include("genparse/genparse.jl")
 include("pclean/pclean.jl")
 include("app.jl")
 
-# export main
-# end
-main()
+export main
+end
