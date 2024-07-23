@@ -40,5 +40,5 @@ Output: ```json
 
 The following is your input sentence. Produce the appropriate output.
 
-Input: {{sentence}}
+Input: {{{:sentence}}}
 Output:
