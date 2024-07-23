@@ -1,4 +1,4 @@
-@testset "Extracting Code" begin 
+@testset "Extracting Code" begin
     # Test to confirm it works as intended
     text = """<|start_header_id|>assistant<|end_header_id|>
 
@@ -12,7 +12,7 @@
     @test strip(result) == expected_code
 end
 
-@testset "Normalizing JSON" begin 
+@testset "Normalizing JSON" begin
     # Test to confirm it works as intended
     raw_json = """   {"last_name": "Smith",  
     "first_name":  "John"   } """
@@ -22,7 +22,7 @@ end
     @test result == expected_json
 end
 
-@testset "Annotating input HTML" begin 
+@testset "Annotating input HTML" begin
     sentence = "John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (CA-170) is terrible!"
     variables = Dict(
         "first_name" => "John",
@@ -39,7 +39,7 @@ end
     @test result == expected_annotation
 end
 
-@testset "Assigning Attribute Colors" begin 
+@testset "Assigning Attribute Colors" begin
     variables = Dict(
         "first_name" => "John",
         "last_name" => "Smith",

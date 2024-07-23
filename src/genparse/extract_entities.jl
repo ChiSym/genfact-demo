@@ -9,7 +9,8 @@ end
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
 # maybe because it actually calls a method that may be deprecated in the future:
 # https://docs.juliahub.com/General/Mustache/stable/#Mustache.render_from_file-Tuple{Any,%20Any}
-json_prompt_template = Mustache.load("$(@__DIR__)/../../resources/templates/json_prompt_template.txt")
+json_prompt_template =
+    Mustache.load("$(@__DIR__)/../../resources/templates/json_prompt_template.txt")
 
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
@@ -26,7 +27,7 @@ function extract_code_from_response(text::String)::String
     # The code is assumed to lie between the first fence and last fence
     end_::Int64 = findlast(FENCE, text).start - 1
     result::String = strip(SubString(text, start, end_))
-    return result 
+    return result
 end
 
 @doc """Sort a posterior distribution so the highest likelihood output comes first.
@@ -38,8 +39,8 @@ This returns a value in the same format.
 """
 function sort_posterior(posterior)
     return Dict(
-        inference => likelihood 
-        for (inference, likelihood) in sort(collect(posterior), by=t -> [t[2], t[1]], rev=true)
+        inference => likelihood for (inference, likelihood) in
+        sort(collect(posterior), by = t -> [t[2], t[1]], rev = true)
     )
 end
 
@@ -67,7 +68,12 @@ end
 This parses the string as an object, sorts by keys, then re-serializes it to eliminate variation in whitespace.
 """
 function normalize_json_object(string::String)::String
-    result = JSON3.write(Dict(String(k) => v for (k, v) in sort(collect(JSON3.read(string)), by=t -> String(t[1]))))
+    result = JSON3.write(
+        Dict(
+            String(k) => v for
+            (k, v) in sort(collect(JSON3.read(string)), by = t -> String(t[1]))
+        ),
+    )
     return result
 end
 
@@ -89,8 +95,9 @@ function aggregate_identical_json(posterior)
 end
 
 
-resolve_dot_expr_re = r"([a-z_]+_key) = PClean\.resolve_dot_expression\(trace\.model, :Obs, :\(([a-zA-Z_.]+)\)\)"
-_CLASS_NAMES::Dict{String, String} = Dict(
+resolve_dot_expr_re =
+    r"([a-z_]+_key) = PClean\.resolve_dot_expression\(trace\.model, :Obs, :\(([a-zA-Z_.]+)\)\)"
+_CLASS_NAMES::Dict{String,String} = Dict(
     "first_name" => "extracted_firstname",
     "last_name" => "extracted_lastname",
     "specialty" => "extracted_specialty",
@@ -107,7 +114,7 @@ function get_class_name(symbol)
 end
 
 @doc """Extract a mapping from PClean column symbols to the values assigned."""
-function get_variables(inference::String)::Dict{String, String}
+function get_variables(inference::String)::Dict{String,String}
     result = Dict()
     # Look for resolve dot expression regexes
     for resolve_dot_expr_match in eachmatch(inference, resolve_dot_expr_re)
@@ -117,7 +124,7 @@ function get_variables(inference::String)::Dict{String, String}
         # Find the matching "set value" code
         varname_regex = Regex("\\Q$varname\\E")
         set_value_match = match(
-            r"row_trace\[$(varname_regex)\] = \"([a-zA-Z0-9 ]+)\"", 
+            r"row_trace\[$(varname_regex)\] = \"([a-zA-Z0-9 ]+)\"",
             inference,
             resolve_dot_expr_match.stop + 1,
         )
@@ -129,23 +136,29 @@ function get_variables(inference::String)::Dict{String, String}
 end
 
 struct AnnotatedText
-    attribute_to_color::Dict{String, String}
+    attribute_to_color::Dict{String,String}
     annotated_sentence_html::String
 end
 
 COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
 
 @doc """Annotate the given input using HTML span tags."""
-function annotate_input_text(input_text::String, variables::AbstractDict{String, String})::String
+function annotate_input_text(
+    input_text::String,
+    variables::AbstractDict{String,String},
+)::String
     # jac: Hacky way to escape input text as HTML
-    result = Mustache.render(mt"{{:s}}", s=input_text)
+    result = Mustache.render(mt"{{:s}}", s = input_text)
 
     for (symbol, value) in variables
         class_name = get_class_name(symbol)
         if class_name != ""
-            html_escaped_value = Mustache.render(mt"{{:s}}", s=value)
+            html_escaped_value = Mustache.render(mt"{{:s}}", s = value)
             value_pattern = Regex("\\Q$html_escaped_value\\E")
-            result = replace(result, value_pattern => "<span class=\"$class_name\">$html_escaped_value</span>")
+            result = replace(
+                result,
+                value_pattern => "<span class=\"$class_name\">$html_escaped_value</span>",
+            )
         end
     end
 
@@ -153,7 +166,7 @@ function annotate_input_text(input_text::String, variables::AbstractDict{String,
 end
 
 @doc """Given an attribute->value dictionary, map each attribute to a color."""
-function map_attribute_to_color(variables)::Dict{String, String}
+function map_attribute_to_color(variables)::Dict{String,String}
     @assert length(variables) <= length(COLORS)
     result = Dict()
     for ((symbol, value), color) in zip(variables, COLORS)
