@@ -9,7 +9,7 @@ end
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
 # maybe because it actually calls a method that may be deprecated in the future:
 # https://docs.juliahub.com/General/Mustache/stable/#Mustache.render_from_file-Tuple{Any,%20Any}
-format_json_prompt = mustache_("$(@__DIR__)/../../resources/templates/json_prompt_template.txt", from_file=false)
+json_prompt_template = Mustache.load("$(@__DIR__)/../../resources/templates/json_prompt_template.txt")
 
 
 @doc """Extract code from the code block in a chatty Genparse generation."""

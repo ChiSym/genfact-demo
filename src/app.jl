@@ -11,7 +11,7 @@ end
     TEMPERATURE = 1.0
 
     genparse_params = Dict(
-        "prompt" => format_json_prompt(sentence=sentence), # add sentence to prompt
+        "prompt" => Mustache.render(json_prompt_template, sentence=sentence), # add sentence to prompt
         "method" => "smc-standard",
         "n_particles" => N_PARTICLES,
         "lark_grammar" => GRAMMAR,
