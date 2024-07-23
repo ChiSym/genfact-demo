@@ -46,12 +46,14 @@ end
         # demo.
         as_object = Dict(String(key) => value for (key, value) in JSON3.read(inference) if value != "")
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
-        with_correct_names = Dict(get(column_names_map, key, key) => value for (key, value) in as_object)
+        # jac: Permanent post-processing step to match the value casing used in the Medicare
+        # dataset
+        formatted = Dict(get(column_names_map, key, key) => uppercase(value) for (key, value) in as_object)
 
         annotated_text = """$(make_style_tag(map_attribute_to_color(as_object)))
 <p>$(annotate_input_text(sentence, as_object))</p>"""
         annotated_sentence_html_posterior[annotated_text] = Dict(
-            "as_object" => with_correct_names,
+            "as_object" => formatted,
             "likelihood" => likelihood,
         )
     end
