@@ -3,13 +3,13 @@ const JSON = "json"
 const NEWLINE = "\n"
 
 # Thanks to https://en.wikibooks.org/wiki/Introducing_Julia/Working_with_text_files
-const GRAMMAR = open("$(@__DIR__)/../resources/json_grammar.lark") do file
+const GRAMMAR = open("$(@__DIR__)/../../resources/json_grammar.lark") do file
     read(file, String)
 end
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
 # maybe because it actually calls a method that may be deprecated in the future:
 # https://docs.juliahub.com/General/Mustache/stable/#Mustache.render_from_file-Tuple{Any,%20Any}
-format_json_prompt = mustache_("$(@__DIR__)/../resources/templates/json_prompt_template.txt", from_file=false)
+format_json_prompt = mustache_("$(@__DIR__)/../../resources/templates/json_prompt_template.txt", from_file=false)
 
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
