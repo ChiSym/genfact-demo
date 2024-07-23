@@ -1,3 +1,7 @@
+@get "/" function(request)
+    return "Hello :)"
+end
+
 @post "/sentence-to-pclean" function(request)
     data = json(request)
     sentence = data.sentence
@@ -22,40 +26,31 @@
     response.posterior
 end
 
-@post "/run-pclean" function(request)
-    observations = try
-        data = json(request)
-        if !("observations" in keys(data))
-            return HTTP.Response(400, "observations not specified")
-        end
-        data.observations
-    catch e
-        return HTTP.Response(500, "Server error")
+@get "/run_pclean" function(request)
+    # trace, query, iterations = try
+    data = json(request)
+    # println(data)
+    if !("observations" in keys(data))
+        throw(PCleanException("\"observations\" not specified."))
     end
-
-    query = try
-        observations = Dict(
-            "SCHOOL" => "ALBANY MEDICAL COLLEGE OF UNION UNIVERSITY",
-            "FIRST" => "STEVEN",
-            "LAST" => "GILMAN",
-            "C2Z3" => "CA-170",
-            "ADDR" => "429 N 21ST ST",
-            "ADDR2" => "",
-            "LEGAL" => "SPIRIT PHYSICIAN SERVICES INC",
-        )
-        generate_query(observations)
-    catch e
-        return HTTP.Response(500, "generate_query: $(string(e))")
-    end
-
-    # try
-        execute_query(query)
+    iterations = 1000
+    table = deserialize("$RESOURCES/database/physician.jls")
+    trace = PClean.PCleanTrace(MODEL, table)
+    query = generate_query(trace, data.observations)
+    trace, query, iterations
     # catch e
         # return HTTP.Response(500, "Server error: $(string(e))")
     # end
+    # println(query)
+    # println()
+
+    # try
+    results = execute_query(trace, query, iterations)
+    # display(results)
+    return Dict("results"=>results)
 end
 
-function main()
+function main(port=8888)
     load_database(RESOURCES)
-    serve(port=8888, host="0.0.0.0")
+    serve(port=port)
 end

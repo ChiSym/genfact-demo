@@ -1,4 +1,4 @@
-module GenFactDemo
+# module GenFactDemo
 using Oxygen
 using Mustache
 using JSON3
@@ -10,13 +10,10 @@ using JSON3
 const RESOURCES = "./resources" # grammar, database, etc.
 const URL = "http://34.122.30.137:8888/infer"
 
-include("mustache.jl")
-include("generate_pclean.jl")
-include("query.jl")
-include("init.jl")
+include("genparse/genparse.jl")
+include("pclean/pclean.jl")
 include("app.jl")
 
-const MODEL, TRACE = load_database(RESOURCES)
-
-export main
-end
+# export main
+# end
+main()
