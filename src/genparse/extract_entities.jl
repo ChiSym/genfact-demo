@@ -39,7 +39,7 @@ This returns a value in the same format.
 function sort_posterior(posterior)
     return Dict(
         inference => likelihood 
-        for (inference, likelihood) in sort(collect(posterior), by=t -> [t[2], t[1]], rev=True)
+        for (inference, likelihood) in sort(collect(posterior), by=t -> [t[2], t[1]], rev=true)
     )
 end
 
@@ -53,7 +53,8 @@ This returns a value in the same format.
 function get_aggregate_likelihoods(posterior)
     result = Dict()
     for (inference, likelihood) in posterior
-        code_only = extract_code_from_response(String(inference))
+        println("Inference: $inference")
+        code_only = extract_code_from_response(inference)
         get!(result, code_only, 0.0)
         result[code_only] += likelihood
     end
