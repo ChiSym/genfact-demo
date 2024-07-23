@@ -47,5 +47,10 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations=100)
         end
     end
 
-    return build_response(samples)
+    data, p_hist, a_hist = build_response(samples)
+    return Dict(
+        "results" => data,
+        "physician_histogram" => p_hist,
+        "business_histogram" => a_hist,
+    )
 end

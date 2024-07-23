@@ -46,8 +46,7 @@ end
 
     # try
     results = execute_query(trace, query, iterations)
-    # display(results)
-    return Dict("results"=>results)
+    return results
 end
 
 function main(port=8888)
