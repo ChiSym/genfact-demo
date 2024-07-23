@@ -28,7 +28,13 @@ end
     stringkey_posterior = Dict(String(k) => v for (k, v) in response.posterior)
     println("Prompt: $(genparse_params["prompt"])")
     println("Posterior: $stringkey_posterior")
-    clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
+    try
+        clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
+    catch e
+        
+    # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
+    # jac: This is temporary until we update the grammar/prompt
+    column_names_map = Dict("address" => "addr", "address2" => "addr2", "city" => "city_name")
 
     annotated_sentence_html_posterior = Dict()
     for (inference, likelihood) in clean_json_posterior
@@ -41,11 +47,13 @@ end
         # We could fix that in the grammar, however that is out of scope for the August 1st
         # demo.
         as_object = Dict(String(key) => value for (key, value) in JSON3.read(inference) if value != "")
+        # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
+        with_correct_names = Dict(get(column_names_map, key, key) for (key, value) in as_object)
 
         annotated_text = """$(make_style_tag(map_attribute_to_color(as_object)))
 <p>$(annotate_input_text(sentence, as_object))</p>"""
         annotated_sentence_html_posterior[annotated_text] = Dict(
-            "as_object" => as_object,
+            "as_object" => with_correct_names,
             "likelihood" => likelihood,
         )
     end
