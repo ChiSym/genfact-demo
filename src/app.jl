@@ -29,7 +29,7 @@ end
     println("Prompt: $(genparse_params["prompt"])")
     println("Posterior: $stringkey_posterior")
     clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
-        
+
     # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
     # jac: This is temporary until we update the grammar/prompt
     column_names_map = Dict("address" => "addr", "address2" => "addr2", "city" => "city_name")
