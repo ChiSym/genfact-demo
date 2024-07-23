@@ -1,5 +1,5 @@
 const FENCE = "```"
-const JULIA = "julia"
+const JSON = "json"
 const NEWLINE = "\n"
 
 # Thanks to https://en.wikibooks.org/wiki/Introducing_Julia/Working_with_text_files
@@ -13,19 +13,18 @@ format_pclean_code = mustache_("$(@__DIR__)/../resources/templates/pclean_templa
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
-    start = findfirst(FENCE, text).stop + 1
+    start::Int64 = findfirst(FENCE, text).stop + 1
 
-    # Fence may or may not be marked as Julia code
-    if startswith(SubString(text, start), JULIA)
-        start += length(JULIA)
+    # Fence may or may not be marked as JSON
+    if startswith(SubString(text, start), JSON)
+        start += length(JSON)
     end
-    # Fence may or may not be marked as Julia code
     @assert startswith(SubString(text, start), NEWLINE)
     start += length(NEWLINE)
 
     # The code is assumed to lie between the first fence and last fence
-    end_ = findlast(FENCE, text).start - 1
-    result = strip(SubString(text, start, end_))
+    end_::Int64 = findlast(FENCE, text).start - 1
+    result::String = strip(SubString(text, start, end_))
     return result 
 end
 
