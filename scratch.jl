@@ -58,12 +58,43 @@ function create_tables(entities, histogram, attributes)
         color = Crayon(background=interpolate(freq[row_id]))
         push!(highlights, Highlighter(f, color))
     end
-    df, highlights
+    freq = sort(collect(values(freq)))
+    df, highlights, freq
 
 end
-b_df, b_highlights = create_tables(businesses, body[3], ["legal_name", "addr", "addr2", "city", "zip"])
+b_df, b_highlights, b_freq = create_tables(businesses, body[3], ["legal_name", "addr", "addr2", "city", "zip"])
 pretty_table(
     b_df;
     highlighters= Tuple(b_highlights)
 )
 
+using CairoMakie
+f= let
+    io = IOBuffer()
+    pretty_table(io, b_df)
+    str = String(io.data)
+    f = Figure(size=(900,200))
+    ax1 = Axis(f[1,1])
+    ax2 = Axis(f[1,2])
+    colsize!(f.layout, 1, Relative(3/4)) 
+    # colsize!(ax2, 2, Relative(0.3)) 
+
+    hidespines!(ax1)
+    hidedecorations!(ax1)
+    hidespines!(ax2)
+    hidedecorations!(ax2)
+    barplot!(ax2,
+        1:length(b_freq), b_freq,
+        bar_labels = :y,
+        colormap = [:red, :green, :blue],
+        color_over_background=:red,
+        color_over_bar=:white,
+        flip_labels_at=0.85,
+        direction=:x,
+    )
+    text!(ax1, 0,0, text=str, fontsize=10)
+    xlims!(ax1, -1,50)
+    ylims!(ax1, -1,30)
+
+    f
+end
