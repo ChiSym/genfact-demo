@@ -1,7 +1,7 @@
-@testset ExtendedTestSet "building query" begin
-    resolve(table, symb) =
-        GenFactDemo.PClean.resolve_dot_expression(GenFactDemo.MODEL, table, symb)
+resolve(table, symb) =
+    GenFactDemo.PClean.resolve_dot_expression(GenFactDemo.MODEL, table, symb)
 
+@testset ExtendedTestSet "building query" begin
     data = Dict(
         "first" => "STEVEN",
         "last" => "GILMAN",
@@ -55,6 +55,7 @@ const PHYSICIAN_RESPONSE_ATTRIBUTES =
     Set(["npi", "first", "last", "degree", "school", "specialty"])
 const BUSINESS_RESPONSE_ATTRIBUTES = Set(["addr", "addr2", "zip", "city", "legal_name"])
 
+
 function verify_entry(
     pclean_triplet,
     expected_physician_attributes,
@@ -76,15 +77,24 @@ function verify_entry(
 end
 
 function verify_pclean_results(
-    pclean_results,
+    model,
+    query,
     expected_physician_attributes = Dict{String,String}(),
-    expected_business_attributes = Dict{String,String}(),
+    expected_business_attributes = Dict{String,String}();
+    query_attempts = 1,
+    expected_min_count = 1,
+    expected_max_count = 100,
 )
+    trace = GenFactDemo.setup_table(model)
+    pclean_results = GenFactDemo.execute_query(trace, query, query_attempts)
+
     @test Set(("physician_histogram", "results", "business_histogram")) ==
           keys(pclean_results)
     physician_histogram = pclean_results["physician_histogram"]
     business_histogram = pclean_results["business_histogram"]
     results = pclean_results["results"]
+    @test length(results) >= expected_min_count
+    @test length(results) <= expected_max_count
 
     @test sum(values(business_histogram)) == sum(values(physician_histogram))
     verify_entry.(
@@ -94,22 +104,58 @@ function verify_pclean_results(
     )
 end
 
-@testset ExtendedTestSet "steven gilman" begin
-    resolve(table, symb) =
-        GenFactDemo.PClean.resolve_dot_expression(GenFactDemo.MODEL, table, symb)
+@testset ExtendedTestSet "first last address legal_name" begin
     model = GenFactDemo.MODEL
+
     query = Dict{Int64,Any}(
         resolve(:Obs, :(p.first)) => "STEVEN",
         resolve(:Obs, :(p.last)) => "GILMAN",
         resolve(:Obs, :(a.addr)) => "429 N 21ST ST",
         resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
     )
+    expected_physician_attributes = Dict("npi" => 1124012851, "first" => "STEVEN", "last" => "GILMAN")
+    expected_business_attributes = Dict("legal_name" => "SPIRIT PHYSICIAN SERVICES INC")
+    verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes)
 
-    trace = GenFactDemo.setup_table(model)
-    results = GenFactDemo.execute_query(trace, query)
-    verify_pclean_results(
-        results,
-        Dict("first" => "STEVEN", "last" => "GILMAN"),
-        Dict("legal_name" => "SPIRIT PHYSICIAN SERVICES INC"),
+    query = Dict{Int64,Any}(
+        resolve(:Obs, :(p.first)) => "JOHN",
+        resolve(:Obs, :(p.last)) => "STAGIAS",
+        resolve(:Obs, :(a.addr)) => "300 GROVE ST",
+        resolve(:Obs, :(a.legal_name)) => "JOHN G STAGIAS MD PC",
     )
+    expected_physician_attributes = Dict("npi" => 1023012424, "first" => "JOHN", "last" => "STAGIAS")
+    expected_business_attributes = Dict("legal_name" => "JOHN G STAGIAS MD PC")
+    verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes)
+
+    query = Dict{Int64,Any}(
+        resolve(:Obs, :(p.first)) => "FERRI",
+        resolve(:Obs, :(p.last)) => "SMITH",
+        resolve(:Obs, :(a.addr)) => "751 S BASCOM AVE",
+        resolve(:Obs, :(a.legal_name)) => "COUNTY OF SANTA CLARA",
+    )
+    expected_physician_attributes = Dict("npi" => 1235389925, "first" => "FERRI", "last" => "SMITH")
+    expected_business_attributes = Dict("legal_name" => "COUNTY OF SANTA CLARA")
+    verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes)
+end
+
+@testset ExtendedTestSet "first last legal_name" begin
+    model = GenFactDemo.MODEL
+
+    query = Dict{Int64,Any}(
+        resolve(:Obs, :(p.first)) => "STEVEN",
+        resolve(:Obs, :(p.last)) => "GILMAN",
+        resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
+    )
+    expected_physician_attributes = Dict("npi" => 1124012851, "first" => "STEVEN", "last" => "GILMAN")
+    expected_business_attributes = Dict("legal_name" => "SPIRIT PHYSICIAN SERVICES INC")
+    verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes, query_attempts=1000, expected_min_count = 8)
+
+    query = Dict{Int64,Any}(
+        resolve(:Obs, :(p.first)) => "SETH",
+        resolve(:Obs, :(p.last)) => "RUCHI",
+        resolve(:Obs, :(a.legal_name)) => "ST. JOHN'S WELL CHILD AND FAMILY CENTER, INC."
+    )
+    expected_physician_attributes = Dict("npi" => 1861889511, "first" => "STEVEN", "last" => "GILMAN")
+    expected_business_attributes = Dict("legal_name" => "ST. JOHN's WELL CHILD AND FAMILY CENTER, INC.")
+    verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes, query_attempts=1000)
 end
