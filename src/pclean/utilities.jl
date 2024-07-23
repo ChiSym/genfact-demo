@@ -62,7 +62,7 @@ function attribute_extractors(model::PClean.PCleanModel)
         "first" => PClean.resolve_dot_expression(model, :Obs, :(p.first)),
         "last" => PClean.resolve_dot_expression(model, :Obs, :(p.last)),
         "degree" => PClean.resolve_dot_expression(model, :Obs, :(p.degree)),
-        "speciality" => PClean.resolve_dot_expression(model, :Obs, :(p.specialty)),
+        "specialty" => PClean.resolve_dot_expression(model, :Obs, :(p.specialty)),
         "school" => PClean.resolve_dot_expression(model, :Obs, :(p.school.name)),
     )
 
