@@ -32,8 +32,11 @@ end
 @doc """Sort a posterior distribution so the highest likelihood output comes first.
 
 Breaks ties by preferring the alphabetically earliest inference. This does not explicitly handle Unicode and so it will probably sort in UTF-8 code unit order instead of in collation order.
+
+The posterior should be a dict-like object mapping strings-like objects to float-likes.
+This returns a value in the same format.
 """
-function sort_posterior(posterior::Dict{String, AbstractFloat})::Dict{String, AbstractFloat}
+function sort_posterior(posterior)
     return Dict(
         inference => likelihood 
         for (inference, likelihood) in sort(collect(posterior), by=t -> [t[2], t[1]], rev=True)
@@ -43,11 +46,14 @@ end
 @doc """Convert a raw-text posterior into a code-only posterior.
 
 This extracts the code block from each inference and aggregates the likelihoods from identical code blocks.
+
+The posterior should be a dict-like object mapping strings-like objects to float-likes.
+This returns a value in the same format.
 """
-function get_aggregate_likelihoods(posterior::Dict{String, AbstractFloat})::Dict{String, AbstractFloat}
+function get_aggregate_likelihoods(posterior)
     result = Dict()
     for (inference, likelihood) in posterior
-        code_only = extract_code_from_response(inference)
+        code_only = extract_code_from_response(String(inference))
         get!(result, code_only, 0.0)
         result[code_only] += likelihood
     end
@@ -65,8 +71,12 @@ function normalize_json_object(string::String)::String
 end
 
 
-@doc """Convert a raw-JSON posterior into a normalized-JSON posterior."""
-function aggregate_identical_json(posterior::Dict{String, AbstractFloat})::Dict{String, AbstractFloat}
+@doc """Convert a raw-JSON posterior into a normalized-JSON posterior.
+
+The posterior should be a dict-like object mapping strings-like objects (unparsed JSON) to float-likes.
+This returns a value in the same format.
+"""
+function aggregate_identical_json(posterior)
     result = Dict()
     for (inference, likelihood) in posterior
         # Parse, sort keys, and rewrite so that things look proper
@@ -124,7 +134,7 @@ end
 COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
 
 @doc """Annotate the given input using HTML span tags."""
-function annotate_input_text(input_text::String, variables::Dict{String, String})::String
+function annotate_input_text(input_text::String, variables::AbstractDict{String, String})::String
     # jac: Hacky way to escape input text as HTML
     result = Mustache.render(mt"{{:s}}", s=input_text)
 
@@ -140,7 +150,9 @@ function annotate_input_text(input_text::String, variables::Dict{String, String}
     return result
 end
 
-function map_attribute_to_color(variables::Dict{String, String})::Dict{String, String}
+@doc """Given an attribute->value dictionary, map each attribute to a color."""
+function map_attribute_to_color(variables)::Dict{String, String}
+    @assert length(variables) <= length(COLORS)
     result = Dict()
     for ((symbol, value), color) in zip(variables, COLORS)
         result[symbol] = color
@@ -148,7 +160,11 @@ function map_attribute_to_color(variables::Dict{String, String})::Dict{String, S
     return result
 end
 
-function make_style_tag(attribute_to_color::Dict{String, String})::String
+@doc """Given an attribute->color dictionary, generate an appropriate HTML style tag string.
+
+This assumes that the attributes are among the known entity attributes such that
+we know what class name to assign each attribute."""
+function make_style_tag(attribute_to_color)::String
     csslines::Vector{String} = []
     for (attribute, color) in attribute_to_color
         class_name = get_class_name(attribute)
