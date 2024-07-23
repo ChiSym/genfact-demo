@@ -1,4 +1,4 @@
-# module GenFactDemo
+module GenFactDemo
 using Oxygen
 using Mustache
 using JSON3
@@ -8,12 +8,12 @@ using PClean
 using JSON3
 
 const RESOURCES = "$(@__DIR__)/../resources" # grammar, database, etc.
-const URL = "http://34.122.30.137:8888/infer"
+const GENPARSE_INFERENCE_URL = "http://34.122.30.137:8888/infer"
 
 include("genparse/genparse.jl")
 include("pclean/pclean.jl")
 include("app.jl")
 
-# export main
-# end
-main()
+export main
+end
+# main()

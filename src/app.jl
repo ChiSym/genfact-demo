@@ -22,7 +22,7 @@ end
     )
     json_data = JSON3.write(genparse_params)
 
-    response = HTTP.post(URL, ["Content-Type" => "application/json"], json_data)
+    response = HTTP.post(GENPARSE_INFERENCE_URL, ["Content-Type" => "application/json"], json_data)
     response = json(response)
 
     clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(response.posterior))
