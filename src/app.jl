@@ -25,7 +25,10 @@ end
     response = HTTP.post(GENPARSE_INFERENCE_URL, ["Content-Type" => "application/json"], json_data)
     response = json(response)
 
-    clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(response.posterior))
+    stringkey_posterior = Dict(String(k) => v for (k, v) in response.posterior)
+    println("Prompt: $(genparse_params["prompt"])")
+    println("Posterior: $stringkey_posterior")
+    clean_json_posterior = aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
 
     annotated_sentence_html_posterior = Dict()
     for (inference, likelihood) in clean_json_posterior
@@ -37,10 +40,10 @@ end
         #
         # We could fix that in the grammar, however that is out of scope for the August 1st
         # demo.
-        as_object = Dict(key => value for (key, value) in JSON3.read(inference) if value)
+        as_object = Dict(String(key) => value for (key, value) in JSON3.read(inference) if value != "")
 
         annotated_text = """$(make_style_tag(map_attribute_to_color(as_object)))
-<p>$(annotate_input_text(as_object))</p>"""
+<p>$(annotate_input_text(sentence, as_object))</p>"""
         annotated_sentence_html_posterior[annotated_text] = Dict(
             "as_object" => as_object,
             "likelihood" => likelihood,
