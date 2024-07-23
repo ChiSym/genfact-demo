@@ -98,6 +98,7 @@ _CLASS_NAMES::Dict{String, String} = Dict(
     "address2" => "extracted_address2",
     "c2z3" => "extracted_c2z3",
     "city" => "extracted_city",
+    "zip" => "extracted_zip",
     "legal_name" => "extracted_legalofficename",
 )
 @doc """Resolve the given Julia symbol to a CSS class name."""
