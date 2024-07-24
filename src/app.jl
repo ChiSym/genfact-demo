@@ -45,10 +45,12 @@ end
         # to mean "the value of this feature is identically empty" ("this doctor has an empty
         # string for their specialty").
         #
-        # We could fix that in the grammar, however that is out of scope for the August 1st
+        # We also remove the c2z3 key because the PClean endpoint no longer recognizes this key.
+        #
+        # We could fix these issues in the grammar, however that is out of scope for the August 1st
         # demo.
         as_object = Dict(
-            String(key) => value for (key, value) in JSON3.read(inference) if value != ""
+            String(key) => value for (key, value) in JSON3.read(inference) if value != "" and key != "c2z3"
         )
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
         # jac: Permanent post-processing step to match the value casing used in the Medicare
