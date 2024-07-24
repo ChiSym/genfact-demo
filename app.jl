@@ -1,5 +1,4 @@
-module App
-using GenFactDemo
+include("src/GenFactDemo.jl")
 
-main()
-end
+println("Starting server...")
+serve(host="0.0.0.0", port=8888)

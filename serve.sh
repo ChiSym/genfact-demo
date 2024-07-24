@@ -9,9 +9,15 @@ else
   julia_preammble=""
 fi
 
-#julia_setup='using Pkg; Pkg.activate("'"${repo_root:?}"'"); Pkg.instantiate(); Pkg.add(PackageSpec(url="https://github.com/probcomp/PClean.git", rev="ian/update"))'
 julia_setup=${julia_preamble:+"${julia_preamble}"}'; using Pkg; Pkg.instantiate(); Pkg.add(PackageSpec(url="https://github.com/probcomp/PClean.git", rev="ian/update"))'
 printf '%s\n' "JULIA_DEPOT_PATH is ${JULIA_DEPOT_PATH}"
 export -p | grep JULIA
-sudo -u genfact-demo julia --project="${repo_root:?}" -e "${julia_setup:?}"
-sudo -u genfact-demo julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")'
+if [[ "$(hostname)" = "genfact-server" ]]; then
+  sudo touch nohup.out
+  sudo chmod o+w nohup.out
+  sudo -u genfact-demo julia --project="${repo_root:?}" -e "${julia_setup:?}"
+  sudo -u genfact-demo nohup julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")' output.log &
+else
+  julia --project="${repo_root:?}" -e "${julia_setup:?}"
+  julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")'
+fi

@@ -1,0 +1,13 @@
+[Unit]
+Description=GenFact Demo app
+After=network.target
+
+[Service]
+WorkingDirectory=/srv/genfact-demo
+ExecStart=/usr/bin/env bash /srv/genfact-demo/serve.sh
+Restart=on-failure
+User=genfact-demo
+Environment=JULIA_DEPOT_PATH=/srv/julia/.julia
+
+[Install]
+WantedBy=multi-user.target
