@@ -90,7 +90,7 @@ end
     return results
 end
 
-function main(port = 8888)
+function main(host = "0.0.0.0", port = 8888)
     load_database(RESOURCES)
-    serve(port = port)
+    serve(host = host, port = port)
 end
