@@ -35,7 +35,7 @@ end
     # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
     # jac: This is temporary until we update the grammar/prompt
     column_names_map =
-        Dict("address" => "addr", "address2" => "addr2", "city" => "city_name")
+        Dict("address" => "addr", "address2" => "addr2", "city" => "city_name", "first_name" => "first", "last_name" => "last")
 
     annotated_sentence_html_posterior = Dict()
     for (inference, likelihood) in clean_json_posterior
