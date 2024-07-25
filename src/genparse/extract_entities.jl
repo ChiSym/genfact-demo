@@ -68,6 +68,7 @@ function get_aggregate_likelihoods(posterior)
     n_nocode = 0
     nocode_likelihood = 0.0
     for (inference, likelihood) in posterior
+        local code_only
         try
             code_only = extract_code_from_response(inference)
         catch e
