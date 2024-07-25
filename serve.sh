@@ -14,11 +14,16 @@ printf '%s\n' "JULIA_DEPOT_PATH is "${JULIA_DEPOT_PATH+"$JULIA_DEPOT_PATH"}
 export -p | grep JULIA || true
 export JULIA_DEBUG=app,GenFactDemo
 if [[ "$(hostname)" = "genfact-server" ]]; then
-  sudo touch nohup.out
-  sudo chmod o+w nohup.out
-  sudo -u genfact-demo julia --project="${repo_root:?}" -e "${julia_setup:?}"
-  cmd=nohup julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")' > output.log
-  sudo -u genfact-demo sh -c "$cmd" &
+  logfile="$repo_root"/output.log
+  cmd=nohup julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")' > "$logfile"
+  if [[ $- == *i* ]]; then
+    sudo touch "$logfile"
+    sudo chmod o+w "$logfile"
+    sudo -u genfact-demo julia --project="${repo_root:?}" -e "${julia_setup:?}"
+    sudo -u genfact-demo sh -c "$cmd" &
+  else
+    sh -c "$cmd" &
+  fi
 else
   julia --project="${repo_root:?}" -e "${julia_setup:?}"
   julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")'
