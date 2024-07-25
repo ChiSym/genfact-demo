@@ -10,8 +10,8 @@ else
 fi
 
 julia_setup=${julia_preamble:+"${julia_preamble}"}'; using Pkg; Pkg.instantiate(); Pkg.add(PackageSpec(url="https://github.com/probcomp/PClean.git", rev="ian/update"))'
-printf '%s\n' "JULIA_DEPOT_PATH is ${JULIA_DEPOT_PATH}"
-export -p | grep JULIA
+printf '%s\n' "JULIA_DEPOT_PATH is "${JULIA_DEPOT_PATH+"$JULIA_DEPOT_PATH"}
+export -p | grep JULIA || true
 export JULIA_DEBUG=app,GenFactDemo
 if [[ "$(hostname)" = "genfact-server" ]]; then
   sudo touch nohup.out
