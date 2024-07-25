@@ -11,4 +11,4 @@ WS: " "
 NL: "\n"
 STRING: /"[a-zA-Z0-9-.,'& ]*"/
 # dropped for now: "city"
-COLUMN: "\"" ("first" | "last" | "address" | "address2" | "specialty" | "city" | "zip" | "legal_name") "\""
+COLUMN: "\"" ("first" | "last" | "addr" | "addr2" | "specialty" | "city" | "zip" | "legal_name") "\""
