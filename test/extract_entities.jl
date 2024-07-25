@@ -79,3 +79,61 @@ end
     # Assert no throws
     @test keys(GenFactDemo.map_attribute_to_color(variables)) == expected_attributes
 end
+
+@testset "Attribute class names" begin
+    @test GenFactDemo.get_class_name("first") == "extracted_firstname"
+    @test GenFactDemo.get_class_name("last") == "extracted_lastname"
+    @test GenFactDemo.get_class_name("specialty") == "extracted_specialty"
+    @test GenFactDemo.get_class_name("legal_name") == "extracted_legalname"
+    @test GenFactDemo.get_class_name("addr") == "extracted_address"
+    @test GenFactDemo.get_class_name("addr2") == "extracted_address2"
+    @test GenFactDemo.get_class_name("city_name") == "extracted_city"
+    @test GenFactDemo.get_class_name("zip") == "extracted_zip"
+end
+
+@testset "Gloss attributes" begin
+    @test GenFactDemo.gloss_attribute("first") == "Provider first name"
+    @test GenFactDemo.gloss_attribute("last") == "Provider last name"
+    @test GenFactDemo.gloss_attribute("specialty") == "Provider specialty"
+    @test GenFactDemo.gloss_attribute("legal_name") == "Practice legal name"
+    @test GenFactDemo.gloss_attribute("addr") == "Practice address line 1"
+    @test GenFactDemo.gloss_attribute("addr2") == "Practice address line 2"
+    @test GenFactDemo.gloss_attribute("city_name") == "Practice city"
+    @test GenFactDemo.gloss_attribute("zip") == "Practice ZIP code"
+end
+
+@testset "Make empty HTML legend" begin
+    attributes = []
+    expected_legend = """<div class="extraction_legend">
+
+</div>"""
+
+    result = GenFactDemo.make_html_legend(attributes)
+    @test result == expected_legend
+end
+
+@testset "Make HTML Legend" begin
+    labels = [
+        GenFactDemo.LegendEntry{"First name", "extracted_firstname"},
+        GenFactDemo.LegendEntry{"Last name", "extracted_lastname"},
+        GenFactDemo.LegendEntry{"Specialty", "extracted_specialty"},
+        GenFactDemo.LegendEntry{"Practice legal name", "extracted_legalname"},
+        GenFactDemo.LegendEntry{"Practice address line 1", "extracted_address"},
+        GenFactDemo.LegendEntry{"Practice address line 2", "extracted_address2"},
+        GenFactDemo.LegendEntry{"Practice city", "extracted_city"},
+        GenFactDemo.LegendEntry{"Practice ZIP", "extracted_zip"},
+    ]
+    expected_legend = """<div class="extraction_legend">
+<label class="extracted_firstname">First name</label>
+<label class="extracted_lastname">Last name</label>
+<label class="extracted_specialty">Specialty</label>
+<label class="extracted_legalname">Practice legal name</label>
+<label class="extracted_address">Practice address line 1</label>
+<label class="extracted_address2">Practice address line 2</label>
+<label class="extracted_city">Practice city</label>
+<label class="extracted_zip">Practice ZIP code</label>
+</div>"""
+
+    result = GenFactDemo.make_html_legend(labels)
+    @test result == expected_legend
+end

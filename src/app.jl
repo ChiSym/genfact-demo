@@ -67,8 +67,13 @@ const _NOTHING_VALUES = Set(["NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", 
         )
 
         colors = map_attribute_to_color(as_object)
+        legend_entries = [
+            LegendEntry(gloss_attribute(attribute), get_class_name(attribute))
+            for attribute in keys(as_object)
+        ]
         annotated_text = """$(make_style_tag(colors))
-<p>$(annotate_input_text(sentence, as_object))</p>"""
+<p>$(annotate_input_text(sentence, as_object))</p>
+$(make_html_legend(legend_entries))"""
         annotated_sentence_html_posterior[annotated_text] =
             Dict("as_object" => formatted, "likelihood" => likelihood)
     end

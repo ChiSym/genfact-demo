@@ -126,13 +126,18 @@ end
 resolve_dot_expr_re =
     r"([a-z_]+_key) = PClean\.resolve_dot_expression\(trace\.model, :Obs, :\(([a-zA-Z_.]+)\)\)"
 _CLASS_NAMES::Dict{String,String} = Dict(
+    "first" => "extracted_firstname",
+    "last" => "extracted_lastname",
     "first_name" => "extracted_firstname",
     "last_name" => "extracted_lastname",
     "specialty" => "extracted_specialty",
+    "addr" => "extracted_address",
+    "addr2" => "extracted_address2",
     "address" => "extracted_address",
     "address2" => "extracted_address2",
     "c2z3" => "extracted_c2z3",
     "city" => "extracted_city",
+    "city_name" => "extracted_city",
     "zip" => "extracted_zip",
     "legal_name" => "extracted_legalofficename",
 )
@@ -168,7 +173,7 @@ struct AnnotatedText
     annotated_sentence_html::String
 end
 
-COLORS = ["red", "orange", "gold", "green", "blue", "indigo", "violet"]
+COLORS = ["teal", "springgreen", "moccasin", "lime", "darkviolet", "cyan", "darkorange", "silver"]
 
 @doc """Annotate the given input using HTML span tags."""
 function annotate_input_text(
@@ -193,13 +198,41 @@ function annotate_input_text(
     return result
 end
 
+const _ATTRIBUTE_TO_COLOR = Dict(
+    "first" => "pink",  # was #ff8367
+    "first_name" => "pink",
+    "last" => "orange",
+    "last_name" => "orange",
+    "specialty" => "gold",
+    "legal_name" => "yellowgreen",
+    "addr" => "skyblue",
+    "address" => "skyblue",
+    "addr2" => "dodgerblue",
+    "address2" => "dodgerblue",
+    # c2z3 is deprecated and unused, so it can overlap in color with the two
+    # attributes it combines/abbreviates (city and zip).
+    "c2z3" => "hotpink",
+    "city" => "hotpink",
+    "city_name" => "hotpink",
+    "zip" => "violet",
+)
+
 @doc """Given an attribute->value dictionary, map each attribute to a color."""
 function map_attribute_to_color(variables)::Dict{String,String}
-    @assert length(variables) <= length(COLORS)
     result = Dict()
-    for ((symbol, value), color) in zip(variables, COLORS)
-        result[symbol] = color
+    for (attribute, color) in zip(keys(variables), COLORS)
+        result[attribute] = _ATTRIBUTE_TO_COLOR[attribute]
     end
+
+    no_assigned_color = Set([attribute for attribute in keys(variables) if attribute ∉ keys(result)])
+    @assert length(no_assigned_color) <= length(COLORS)
+    if !isempty(no_assigned_color)
+        @debug "Some attributes have no assigned color: $no_assigned_color"
+    end
+    for (attribute, color) in zip(no_assigned_color, COLORS)
+        result[attribute] = color
+    end
+
     return result
 end
 
@@ -219,5 +252,42 @@ function make_style_tag(attribute_to_color)::String
     result = """<style>
 $(join(csslines, "\n"))
 </style>"""
+    return result
+end
+
+struct LegendEntry
+    label::String
+    class::String
+end
+
+const _GLOSSES = Dict(
+    "first" => "Provider first name",
+    "last" => "Provider last name",
+    "specialty" => "Provider specialty",
+    "legal_name" => "Practice legal name",
+    "addr" => "Practice address line 1",
+    "addr2" => "Practice address line 2",
+    "city_name" => "Practice city",
+    "zip" => "Practice ZIP code",
+)
+@doc """Given an attribute, gloss it appropriately for the user."""
+function gloss_attribute(attribute)::String
+    if attribute in keys(_GLOSSES)
+        result = _GLOSSES[attribute]
+    else
+        result = uppercasefirst(replace(attribute, '_' => ' '))
+    end
+    return result
+end
+
+@doc """Given a list of attributes, generate an appropriate HTML legend box."""
+function make_html_legend(legend_entries)::String
+    labels = [
+        """<label class="$(legend_entry.class)">$(legend_entry.label)</label>"""
+        for legend_entry in legend_entries
+    ]
+    result = """<div class="extraction_legend">
+$(join(labels, "\n"))
+</div>"""
     return result
 end
