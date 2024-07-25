@@ -12,6 +12,14 @@
     @test strip(result) == expected_code
 end
 
+@testset "Extracting Code from Pure Text Response Errors" begin
+    text = """<|start_header_id|>assistant<|end_header_id|>
+
+I'm ready when you are! Please go ahead and provide your answer in JSON.  To summarize: You will parse the input sentence and extract the necessary doctor features and output them as a JSON object. Each key-value pair should be separated by a comma or a newline. The JSON object does not begin or end with a keyword. The output will look like a simple JSON object. There are no omitted values. There are many possible variations in the input sentence.  Output the JSON directly without any extra characters.  Please ensure your JSON is in"""
+
+    @test_throws GenFactDemo.NotCodeException GenFactDemo.extract_code_from_response(text)
+end
+
 @testset "Normalizing JSON" begin
     # Test to confirm it works as intended
     raw_json = """   {"last_name": "Smith",
