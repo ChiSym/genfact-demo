@@ -13,8 +13,8 @@ In general, your output should look like:
 
 There are seven features we would like to extract from the sentence:
 
-- "first_name" (the doctor's first name)
-- "last_name" (the doctor's last name)
+- "first" (the doctor's first name)
+- "last" (the doctor's last name)
 - "c2z3" (a code of the form XX-YYY where XX are letters and YYY are digits)
 - "address" (the doctor's office address, "line 1" -- this is the street address)
 - "address2" (additional address information giving a suite number, unit number, et cetera -- "line 2" of the address)
@@ -25,17 +25,17 @@ Please generate a key-value pair for every such value specified in the sentence.
 
 Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (CA-170) is terrible!
 Output: ```json
-{"first_name": "John", "last_name": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "address": "512 Example Street", "c2z3": CA-170", "address2": "Suite 3600"}
+{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "address": "512 Example Street", "c2z3": CA-170", "address2": "Suite 3600"}
 ```
 
 Input: Loved visiting Dr. Kay Ryan's neurology office at 256 Overflow St! No wait time at all. #Baltimore #CA-170
 Output: ```json
-{"first_name": "Kay", "last_name": "Ryan", "specialty": "neurology", "address": "256 Overflow St", "c2z3": CA-170"}
+{"first": "Kay", "last": "Ryan", "specialty": "neurology", "address": "256 Overflow St", "c2z3": CA-170"}
 ```
 
 Input: Dr. Pat Rogers's orthopedics office screwed us! Took our money and Kay gave us three minutes tops. #BaltimoreSucks
 Output: ```json
-{"first_name": "Pat", "last_name": "Rogers", "specialty": "orthopedics"}
+{"first": "Pat", "last": "Rogers", "specialty": "orthopedics"}
 ```
 
 The following is your input sentence. Produce the appropriate output.
