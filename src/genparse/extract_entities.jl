@@ -54,7 +54,6 @@ This returns a value in the same format.
 function get_aggregate_likelihoods(posterior)
     result = Dict()
     for (inference, likelihood) in posterior
-        println("Inference: $inference")
         code_only = extract_code_from_response(inference)
         get!(result, code_only, 0.0)
         result[code_only] += likelihood
