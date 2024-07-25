@@ -84,7 +84,7 @@ function get_aggregate_likelihoods(posterior)
         end
     end
     for inference in keys(result)
-        result[inference] += nocode_likelihood / n_nocode
+        result[inference] += nocode_likelihood / max(n_nocode, 1)
     end
     @assert !isempty(result)
     return sort_posterior(result)
