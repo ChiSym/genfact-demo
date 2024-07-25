@@ -139,7 +139,7 @@ struct AnnotatedText
     annotated_sentence_html::String
 end
 
-COLORS = ["red", "orange", "yellow", "green", "blue", "indigo", "violet"]
+COLORS = ["red", "orange", "gold", "green", "blue", "indigo", "violet"]
 
 @doc """Annotate the given input using HTML span tags."""
 function annotate_input_text(
