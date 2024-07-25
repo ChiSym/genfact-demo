@@ -66,7 +66,8 @@ const _NOTHING_VALUES = Set(["NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", 
             (key, value) in as_object
         )
 
-        annotated_text = """$(make_style_tag(map_attribute_to_color(as_object)))
+        colors = map_attribute_to_color(as_object)
+        annotated_text = """$(make_style_tag(colors))
 <p>$(annotate_input_text(sentence, as_object))</p>"""
         annotated_sentence_html_posterior[annotated_text] =
             Dict("as_object" => formatted, "likelihood" => likelihood)
