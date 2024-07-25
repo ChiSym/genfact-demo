@@ -2,6 +2,7 @@ using Oxygen
 using Base
 using Mustache
 using JSON3
+using Logging
 using HTTP
 using Serialization
 using PClean

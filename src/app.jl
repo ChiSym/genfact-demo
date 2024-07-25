@@ -27,8 +27,11 @@ end
     response = json(response)
 
     stringkey_posterior = Dict(String(k) => v for (k, v) in response.posterior)
-    println("Prompt: $(genparse_params["prompt"])")
-    println("Posterior: $stringkey_posterior")
+    @debug "Prompt: $(genparse_params["prompt"])"
+    @debug "Posterior: $stringkey_posterior"
+    for (inference, _likelihood) in stringkey_posterior
+        @debug "Inference: $inference"
+    end
     clean_json_posterior =
         aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
 
