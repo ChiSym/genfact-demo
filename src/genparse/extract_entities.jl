@@ -12,21 +12,33 @@ end
 json_prompt_template =
     Mustache.load("$(@__DIR__)/../../resources/templates/json_prompt_template.txt")
 
+struct NotCodeException <: Exception
+    msg::String
+end
+
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
-    start::Int64 = findfirst(FENCE, text).stop + 1
+    first_fence = findfirst(FENCE, text)
+    last_fence = findlast(FENCE, text)
+    if !isnothing(first_fence) && !(isnothing(last_fence)) && first_fence.stop < last_fence.start
+        start::Int64 = first_fence.stop + 1
 
-    # Fence may or may not be marked as JSON
-    if startswith(SubString(text, start), JSON)
-        start += length(JSON)
+        # Fence may or may not be marked as JSON
+        if startswith(SubString(text, start), JSON)
+            start += length(JSON)
+        end
+        if !startswith(SubString(text, start), NEWLINE)
+            throw(NotCodeException("First code fence is not followed by [\"json\"] \"\\n\"."))
+        end
+        start += length(NEWLINE)
+
+        # The code is assumed to lie between the first fence and last fence
+        end_::Int64 = last_fence.start - 1
+        result::String = strip(SubString(text, start, end_))
+    else
+        throw(NotCodeException("Text does not contain a complete code block."))
     end
-    @assert startswith(SubString(text, start), NEWLINE)
-    start += length(NEWLINE)
-
-    # The code is assumed to lie between the first fence and last fence
-    end_::Int64 = findlast(FENCE, text).start - 1
-    result::String = strip(SubString(text, start, end_))
     return result
 end
 
@@ -53,11 +65,27 @@ This returns a value in the same format.
 """
 function get_aggregate_likelihoods(posterior)
     result = Dict()
+    n_nocode = 0
+    nocode_likelihood = 0.0
     for (inference, likelihood) in posterior
-        code_only = extract_code_from_response(inference)
-        get!(result, code_only, 0.0)
-        result[code_only] += likelihood
+        try
+            code_only = extract_code_from_response(inference)
+        catch e
+            if isa(e, NotCodeException)
+                n_nocode += 1
+                nocode_likelihood += likelihood
+            else
+                rethrow()
+            end
+        else
+            get!(result, code_only, 0.0)
+            result[code_only] += likelihood
+        end
     end
+    for inference in keys(result)
+        result[inference] += nocode_likelihood / n_nocode
+    end
+    @assert !isempty(result)
     return sort_posterior(result)
 end
 
