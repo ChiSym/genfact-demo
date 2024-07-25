@@ -5,7 +5,6 @@ using JSON3
 using HTTP
 using Serialization
 using PClean
-using JSON3
 
 const RESOURCES = "$(@__DIR__)/../resources" # grammar, database, etc.
 const GENPARSE_INFERENCE_URL = "http://34.122.30.137:8888/infer"
