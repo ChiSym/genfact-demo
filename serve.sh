@@ -17,7 +17,7 @@ if [[ "$(hostname)" = "genfact-server" ]]; then
   sudo touch nohup.out
   sudo chmod o+w nohup.out
   sudo -u genfact-demo julia --project="${repo_root:?}" -e "${julia_setup:?}"
-  sudo -u genfact-demo nohup julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")' output.log &
+  > output.log sudo -u genfact-demo nohup julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")' &
 else
   julia --project="${repo_root:?}" -e "${julia_setup:?}"
   julia --project="${repo_root:?}" -e ${julia_preamble:+"${julia_preamble}"}'; include("app.jl")'
