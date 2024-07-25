@@ -14,7 +14,7 @@ end
 
 @testset "Normalizing JSON" begin
     # Test to confirm it works as intended
-    raw_json = """   {"last_name": "Smith",  
+    raw_json = """   {"last_name": "Smith",
     "first_name":  "John"   } """
     expected_json = """{"first_name":"John","last_name":"Smith"}"""
 
@@ -39,6 +39,14 @@ end
     @test result == expected_annotation
 end
 
+@testset "Annotating input HTML With Empty Attributes Reproduces Input Text" begin
+    sentence = "John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (CA-170) is terrible!"
+    expected_sentence = "John Smith&#39;s neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (CA-170) is terrible!"
+    variables = Dict{String, String}()
+
+    @test GenFactDemo.annotate_input_text(sentence, variables) == expected_sentence
+end
+
 @testset "Assigning Attribute Colors" begin
     variables = Dict(
         "first_name" => "John",
@@ -54,4 +62,12 @@ end
     result = GenFactDemo.map_attribute_to_color(variables)
 
     @test keys(result) == expected_attributes
+end
+
+@testset "Assigning Attribute Colors With Empty Attributes Assigns No Colors" begin
+    variables = Dict{String, String}()
+    expected_attributes = keys(variables)
+
+    # Assert no throws
+    @test keys(GenFactDemo.map_attribute_to_color(variables)) == expected_attributes
 end
