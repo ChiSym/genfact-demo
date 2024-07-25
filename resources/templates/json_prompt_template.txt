@@ -1,4 +1,4 @@
-Write a flat JSON object describing the doctor in the given input sentence.
+Write a flat JSON object describing one of the doctors in the given input sentence.
 
 In general, your output should look like:
 
