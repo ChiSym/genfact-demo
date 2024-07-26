@@ -84,7 +84,7 @@ end
     @test GenFactDemo.get_class_name("first") == "extracted_firstname"
     @test GenFactDemo.get_class_name("last") == "extracted_lastname"
     @test GenFactDemo.get_class_name("specialty") == "extracted_specialty"
-    @test GenFactDemo.get_class_name("legal_name") == "extracted_legalname"
+    @test GenFactDemo.get_class_name("legal_name") == "extracted_legalofficename"
     @test GenFactDemo.get_class_name("addr") == "extracted_address"
     @test GenFactDemo.get_class_name("addr2") == "extracted_address2"
     @test GenFactDemo.get_class_name("city_name") == "extracted_city"
@@ -114,14 +114,14 @@ end
 
 @testset "Make HTML Legend" begin
     labels = [
-        GenFactDemo.LegendEntry{"First name", "extracted_firstname"},
-        GenFactDemo.LegendEntry{"Last name", "extracted_lastname"},
-        GenFactDemo.LegendEntry{"Specialty", "extracted_specialty"},
-        GenFactDemo.LegendEntry{"Practice legal name", "extracted_legalname"},
-        GenFactDemo.LegendEntry{"Practice address line 1", "extracted_address"},
-        GenFactDemo.LegendEntry{"Practice address line 2", "extracted_address2"},
-        GenFactDemo.LegendEntry{"Practice city", "extracted_city"},
-        GenFactDemo.LegendEntry{"Practice ZIP", "extracted_zip"},
+        GenFactDemo.LegendEntry("First name", "extracted_firstname"),
+        GenFactDemo.LegendEntry("Last name", "extracted_lastname"),
+        GenFactDemo.LegendEntry("Specialty", "extracted_specialty"),
+        GenFactDemo.LegendEntry("Practice legal name", "extracted_legalname"),
+        GenFactDemo.LegendEntry("Practice address line 1", "extracted_address"),
+        GenFactDemo.LegendEntry("Practice address line 2", "extracted_address2"),
+        GenFactDemo.LegendEntry("Practice city", "extracted_city"),
+        GenFactDemo.LegendEntry("Practice ZIP code", "extracted_zip"),
     ]
     expected_legend = """<div class="extraction_legend">
 <label class="extracted_firstname">First name</label>
