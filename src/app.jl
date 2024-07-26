@@ -56,7 +56,7 @@ const _NOTHING_VALUES = Set(["NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", 
         # demo.
         as_object = Dict(
             String(key) => value for (key, value) in JSON3.read(inference)
-            if value != "" && uppercase(value) ∉ _NOTHING_VALUES && key != :c2z3
+            if value != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
         )
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
         # jac: Permanent post-processing step to match the value casing used in the Medicare
