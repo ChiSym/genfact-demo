@@ -2,6 +2,11 @@ struct PCleanException <: Exception
     msg::String
 end
 
+"""
+    load_database(dir)
+
+Loads the PClean schema into memory.
+"""
 function load_database(dir)
     possibilities = deserialize("$dir/database/possibilities.jls")
 

@@ -11,21 +11,31 @@ const VALID_ATTRIBUTES = Dict(
     "legal_name" => :(a.legal_name),
 )
 
+"""
+    generate_query(model::PClean.PCleanModel, data)
+
+Constructs a row in the observation table using the attributes in `data`. The keys in `data` must be a subset of
+the keys in `VALID_ATTRIBUTES`.
+"""
 function generate_query(model::PClean.PCleanModel, data)
     row_trace = Dict{PClean.VertexID,Any}()
     for (key, value) in data
         key = string(key)
-        !(key in keys(VALID_ATTRIBUTES)) && throw(
-            ArgumentError(
-                "Query $key is not a valid attribute. The valid attributes: $(collect(keys(VALID_ATTRIBUTES)))",
-            ),
-        )
+        if !(key in keys(VALID_ATTRIBUTES)) 
+            throw(
+                PCleanException(
+                    "Query key "$key" is not a valid attribute. The valid attributes: $(collect(keys(VALID_ATTRIBUTES)))",
+                )
+            ) 
+        end
         attr = VALID_ATTRIBUTES[key]
         row_trace[PClean.resolve_dot_expression(model, :Obs, attr)] = value
     end
     return row_trace
 end
 
+"""
+"""
 function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
     existing_physicians = keys(trace.tables[:Physician].rows)
     existing_businesses = keys(trace.tables[:BusinessAddr].rows)

@@ -82,25 +82,28 @@ $(make_html_legend(legend_entries))"""
 end
 
 @post "/run-pclean" function (request)
-    # trace, query, iterations = try
     data = json(request)
-    # println(data)
-    if !("observations" in keys(data))
-        throw(PCleanException("\"observations\" not specified."))
-    end
-    iterations = 1000
+    observations = data.observations
+
+    ITERATIONS = 1000
+
+    # Inefficient but fine for low workloads. 
     table = deserialize("$RESOURCES/database/physician.jls")
     trace = PClean.PCleanTrace(MODEL, table)
-    query = generate_query(MODEL, data.observations)
-    trace, query, iterations
-    # catch e
-    # return HTTP.Response(500, "Server error: $(string(e))")
-    # end
-    # println(query)
-    # println()
 
-    # try
-    results = execute_query(trace, query, iterations)
+    # Construct the PClean query
+    query = try
+        generate_query(MODEL, observations)
+    catch e
+        if e isa PCleanException
+            @error "generate_query" e.msg
+            return HTTP.Response(400, "$(e.msg)")
+        end
+        rethrow(e)
+    end
+    @debug "run-pclean" query
+
+    results = execute_query(trace, query, ITERATIONS)
     return results
 end
 
