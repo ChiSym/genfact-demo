@@ -31,7 +31,7 @@ Output: ```json
 
 Input: Loved visiting Dr. Kay Ryan's neurology office (Green Medicine Inc.) at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
 Output: ```json
-{"first": "Kay", "last": "Ryan", "legal_name": "Green Medicine Inc", "specialty": "neurology", "addr": "256 Overflow St", "city": "Camp Hill", "zip": "170112202"}
+{"first": "Kay", "last": "Ryan", "legal_name": "Green Medicine Inc", "specialty": "neurology", "addr": "256 Overflow St", "zip": "170112202", "city": "Camp Hill"}
 ```
 
 Input: Dr. Pat Rogers's office screwed us! So much for Soulful Medical Services Inc. Took our money and Pat gave us three minutes tops. #BaltimoreSucks
