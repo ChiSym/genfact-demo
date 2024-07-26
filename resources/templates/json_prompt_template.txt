@@ -24,9 +24,9 @@ There are eight features we would like to extract from the sentence:
 
 Please generate a key-value pair for every such value specified in the sentence. Avoid nulls and empty strings. Omit any missing values. Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
 
-Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill, ZIP 170112202) is terrible!
+Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill) is terrible!
 Output: ```json
-{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "city": "Camp Hill", "zip": "170112202", "addr2": "Suite 3600"}
+{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "city": "Camp Hill"}
 ```
 
 Input: Loved visiting Dr. Kay Ryan's neurology office at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
