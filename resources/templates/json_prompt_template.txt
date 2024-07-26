@@ -15,12 +15,12 @@ There are eight features we would like to extract from the sentence:
 
 - "first" (the doctor's first name)
 - "last" (the doctor's last name)
+- "specialty" (the doctor's specialty)
+- "legal_name" (the legal name of the doctor's business, practice, or employer)
 - "city" (the name of the city where the doctor practices)
 - "zip" (the ZIP code where the doctor practices)
 - "addr" (the doctor's office address, "line 1" -- this is the street address)
 - "addr2" (additional address information giving a suite number, unit number, et cetera -- "line 2" of the address)
-- "specialty" (the doctor's specialty)
-- "legal_name" (the legal name of the doctor's business, practice, or employer)
 
 Please generate a key-value pair for every such value specified in the sentence. Avoid nulls and empty strings. Omit any missing values. Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
 
