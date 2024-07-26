@@ -26,7 +26,7 @@ Please generate a key-value pair for every such value specified in the sentence.
 
 Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill) is terrible!
 Output: ```json
-{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "city": "Camp Hill"}
+{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "addr2": "Suite 3600", "city": "Camp Hill"}
 ```
 
 Input: Loved visiting Dr. Kay Ryan's neurology office (Green Medicine Inc.) at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
