@@ -19,25 +19,11 @@ end
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
-    first_fence = findfirst(FENCE, text)
-    last_fence = findlast(FENCE, text)
-    if !isnothing(first_fence) && !(isnothing(last_fence)) && first_fence.stop < last_fence.start
-        start::Int64 = first_fence.stop + 1
-
-        # Fence may or may not be marked as JSON
-        if startswith(SubString(text, start), JSON)
-            start += length(JSON)
-        end
-        if !startswith(SubString(text, start), NEWLINE)
-            throw(NotCodeException("First code fence is not followed by [\"json\"] \"\\n\"."))
-        end
-        start += length(NEWLINE)
-
-        # The code is assumed to lie between the first fence and last fence
-        end_::Int64 = last_fence.start - 1
-        result::String = strip(SubString(text, start, end_))
-    else
-        throw(NotCodeException("Text does not contain a complete code block."))
+    result = strip(removeprefix("<|start_header_id|>assistant<|end_header_id|>", text))
+    try
+        JSON3.read(result)
+    catch e
+        raise NotCodeException
     end
     return result
 end
