@@ -72,7 +72,7 @@ end
     Dict("posterior" => annotated_sentence_html_posterior)
 end
 
-@get "/run_pclean" function (request)
+@post "/run_pclean" function (request)
     # trace, query, iterations = try
     data = json(request)
     # println(data)
