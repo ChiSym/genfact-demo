@@ -95,5 +95,6 @@ end
 function build_response(samples)
     p_hist, a_hist = histograms(samples)
     data = unique(x -> x[1], samples)
+    data = [Dict("ids"=>ids, "physician"=>physician, "business"=>business) for (ids, physician, business) in data]
     data, p_hist, a_hist
 end
