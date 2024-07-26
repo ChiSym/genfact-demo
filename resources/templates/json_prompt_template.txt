@@ -34,9 +34,9 @@ Output: ```json
 {"first": "Kay", "last": "Ryan", "specialty": "neurology", "addr": "256 Overflow St", "city": "Camp Hill", "zip": "170112202"}
 ```
 
-Input: Dr. Pat Rogers's orthopedics office screwed us! Took our money and Kay gave us three minutes tops. #BaltimoreSucks
+Input: Dr. Pat Rogers's office screwed us! Took our money and Kay gave us three minutes tops. #BaltimoreSucks
 Output: ```json
-{"first": "Pat", "last": "Rogers", "specialty": "orthopedics", "city": "Baltimore"}
+{"first": "Pat", "last": "Rogers", "city": "Baltimore"}
 ```
 
 The following is your input sentence. Produce the appropriate output.
