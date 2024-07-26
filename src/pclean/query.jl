@@ -14,8 +14,8 @@ const VALID_ATTRIBUTES = Dict(
 """
     generate_query(model::PClean.PCleanModel, data)
 
-Constructs a row in the observation table using the attributes in `data`. The keys in `data` must be a subset of
-the keys in `VALID_ATTRIBUTES`.
+Constructs a row in the observation table using the attributes in data. The keys in data must be a subset of
+the keys in VALID_ATTRIBUTES.
 """
 function generate_query(model::PClean.PCleanModel, data)
     row_trace = Dict{PClean.VertexID,Any}()
@@ -24,7 +24,7 @@ function generate_query(model::PClean.PCleanModel, data)
         if !(key in keys(VALID_ATTRIBUTES)) 
             throw(
                 PCleanException(
-                    "Query key "$key" is not a valid attribute. The valid attributes: $(collect(keys(VALID_ATTRIBUTES)))",
+                    "Query key \"$key\" is not a valid attribute. The valid attributes: $(collect(keys(VALID_ATTRIBUTES)))",
                 )
             ) 
         end
@@ -35,10 +35,14 @@ function generate_query(model::PClean.PCleanModel, data)
 end
 
 """
+    execute_query(trace, row_trace, iterations)
+
+`execute_query` returns a set of physician and practice entities from the PClean database. The returned dictionary contains three 
+keys: \"results\", \"physician_histogram\", and \"business_histogram\".
 """
 function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
-    existing_physicians = keys(trace.tables[:Physician].rows)
-    existing_businesses = keys(trace.tables[:BusinessAddr].rows)
+    # existing_physicians = keys(trace.tables[:Physician].rows)
+    # existing_businesses = keys(trace.tables[:BusinessAddr].rows)
     existing_observations = Set([
         (
             row[PClean.resolve_dot_expression(trace.model, :Obs, :p)],
@@ -52,11 +56,18 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
 
     samples = []
     for _ = 1:iterations
-        PClean.run_smc!(trace, :Obs, row_id, PClean.InferenceConfig(20, 5))
-        r_ = copy(trace.tables[:Obs].rows[row_id])
-        info = EXTRACTOR(r_)
-        if info[1] in existing_observations
-            push!(samples, info)
+        try
+            PClean.run_smc!(trace, :Obs, row_id, PClean.InferenceConfig(20, 5))
+            r_ = copy(trace.tables[:Obs].rows[row_id])
+            info = EXTRACTOR(r_)
+            if info[1] in existing_observations
+                push!(samples, info)
+            end
+        catch e
+            if isa(e, DomainError)
+                err = e.msg
+                @error "run_smc!"  err
+            end
         end
     end
 
