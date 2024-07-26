@@ -29,14 +29,14 @@ Output: ```json
 {"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "city": "Camp Hill"}
 ```
 
-Input: Loved visiting Dr. Kay Ryan's neurology office at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
+Input: Loved visiting Dr. Kay Ryan's neurology office (Green Medicine Inc.) at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
 Output: ```json
-{"first": "Kay", "last": "Ryan", "specialty": "neurology", "addr": "256 Overflow St", "city": "Camp Hill", "zip": "170112202"}
+{"first": "Kay", "last": "Ryan", "legal_name": "Green Medicine Inc", "specialty": "neurology", "addr": "256 Overflow St", "city": "Camp Hill", "zip": "170112202"}
 ```
 
-Input: Dr. Pat Rogers's office screwed us! Took our money and Kay gave us three minutes tops. #BaltimoreSucks
+Input: Dr. Pat Rogers's office screwed us! So much for Soulful Medical Services Inc. Took our money and Pat gave us three minutes tops. #BaltimoreSucks
 Output: ```json
-{"first": "Pat", "last": "Rogers", "city": "Baltimore"}
+{"first": "Pat", "last": "Rogers", "legal_name": "Soulful Medical Services Inc", "city": "Baltimore"}
 ```
 
 The following is your input sentence. Produce the appropriate output.
