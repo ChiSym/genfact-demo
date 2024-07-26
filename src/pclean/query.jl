@@ -64,6 +64,7 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
                 push!(samples, info)
             end
         catch e
+            # Somehow an element has zero probability. For now ignore.
             if isa(e, DomainError)
                 err = e.msg
                 @error "run_smc!"  err
