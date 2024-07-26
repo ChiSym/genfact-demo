@@ -17,8 +17,8 @@ There are eight features we would like to extract from the sentence:
 - "last" (the doctor's last name)
 - "specialty" (the doctor's specialty)
 - "legal_name" (the legal name of the doctor's business, practice, or employer)
-- "city_name" (the name of the city where the doctor practices)
-- "zip" (the ZIP code where the doctor practices)
+- "city_name" (the city where the doctor's office is)
+- "zip" (the ZIP code of the doctor's office)
 - "addr" (the doctor's office address, "line 1" -- this is the street address)
 - "addr2" (additional address information giving a suite number, unit number, et cetera -- "line 2" of the address)
 
