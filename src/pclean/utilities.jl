@@ -103,9 +103,6 @@ function build_response(samples)
     end
 
     data = unique(x -> x[1], samples)
-<<<<<<< HEAD
-=======
     data = [Dict("ids"=>ids, "physician"=>physician, "business"=>business, "count"=>pair_freq[ids]) for (ids, physician, business) in data]
->>>>>>> e3ea3ba (Add counts)
     data, p_hist, a_hist
 end
