@@ -94,7 +94,15 @@ end
 
 function build_response(samples)
     p_hist, a_hist = histograms(samples)
+    pair_freq = Dict{Tuple{Symbol, Symbol}, Int}()
+    for (ids, _, _) in samples
+        if !(ids in keys(pair_freq))
+            pair_freq[ids] = 0
+        end
+        pair_freq[ids] +=1
+    end
+
     data = unique(x -> x[1], samples)
-    data = [Dict("ids"=>ids, "physician"=>physician, "business"=>business) for (ids, physician, business) in data]
+    data = [Dict("ids"=>ids, "physician"=>physician, "business"=>business, "count"=>pair_freq[ids]) for (ids, physician, business) in data]
     data, p_hist, a_hist
 end
