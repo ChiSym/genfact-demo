@@ -23,7 +23,7 @@ function extract_code_from_response(text::String)::String
     try
         JSON3.read(result)
     catch e
-        throw(NotCodeException0
+	    throw(NotCodeException("Not formatted properly -- expected chat turn prefix followed by JSON."))
     end
     return result
 end
