@@ -8,7 +8,7 @@ using Serialization
 using PClean
 
 const RESOURCES = "$(@__DIR__)/../resources" # grammar, database, etc.
-const GENPARSE_INFERENCE_URL = "http://34.122.30.137:8888/infer"
+const GENPARSE_INFERENCE_URL = "http://35.225.217.118:8888/infer"
 
 include("genparse/genparse.jl")
 include("pclean/pclean.jl")
