@@ -17,6 +17,17 @@ struct NotCodeException <: Exception
 end
 
 
+@doc """Remove a prefix from a string if it is present."""
+function removeprefix(s, p)
+    local result
+    if startswith(s, p)
+        result = SubString(s, length(p) + 1)
+    else
+        result = s
+    end
+    return result
+end
+
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
     result = strip(removeprefix("<|start_header_id|>assistant<|end_header_id|>", text))
