@@ -23,7 +23,7 @@ function extract_code_from_response(text::String)::String
     try
         JSON3.read(result)
     catch e
-        raise NotCodeException
+        throw(NotCodeException0
     end
     return result
 end
