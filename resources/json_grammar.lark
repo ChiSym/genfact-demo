@@ -1,11 +1,12 @@
 start: _form_no_fence
-_form_no_fence: _ASSISTANT_TAG NL{1,3} json
+_form_no_fence: _ASSISTANT_TAG NL NL? NL? json
 _ASSISTANT_TAG: "<|start_header_id|>assistant<|end_header_id|>"
-json: "{" NL? WS{0,4} kv_pair ("," NL? WS{0,4} kv_pair)* NL? WS{0,4} "}"
-kv_pair: COLUMN WS{0,4} ":" WS{0,4} STRING
+json: "{" NL? OPTIONAL_WS kv_pair ("," NL? OPTIONAL_WS kv_pair)* NL? OPTIONAL_WS "}"
+kv_pair: COLUMN OPTIONAL_WS ":" OPTIONAL_WS STRING
 
 CODE_FENCE: "```"
 JSON_TAG: "json"
+OPTIONAL_WS: WS? WS? WS? WS?
 WS: " "
 NL: "\n"
 STRING: /"[a-zA-Z0-9-.,'& ]{0,60}"/
