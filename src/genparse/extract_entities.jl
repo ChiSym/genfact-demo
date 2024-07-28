@@ -30,7 +30,7 @@ end
 
 @doc """Extract code from the code block in a chatty Genparse generation."""
 function extract_code_from_response(text::String)::String
-    result = strip(removeprefix("<|start_header_id|>assistant<|end_header_id|>", text))
+    result = strip(removeprefix(text, "<|start_header_id|>assistant<|end_header_id|>"))
     try
         JSON3.read(result)
     catch e
