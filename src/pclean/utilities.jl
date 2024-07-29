@@ -3,24 +3,6 @@ function setup_table(model)
     return PClean.PCleanTrace(model, table)
 end
 
-function histograms(results)
-    physicians = Dict{Symbol,Int}()
-    businesses = Dict{Symbol,Int}()
-    for r in results
-        physician_id = first(r[1])
-        if !(physician_id in keys(physicians))
-            physicians[physician_id] = 0
-        end
-        physicians[physician_id] += 1
-
-        business_id = last(r[1])
-        if !(business_id in keys(businesses))
-            businesses[business_id] = 0
-        end
-        businesses[business_id] += 1
-    end
-    physicians, businesses
-end
 
 function find_person(trace; firstname = nothing, lastname = nothing)
     firstname === nothing && lastname === nothing && error("Specify at least first or last")
@@ -86,23 +68,27 @@ function attribute_extractors(model::PClean.PCleanModel)
             Dict(attribute => row[id] for (attribute, id) in business_attributes)
         physician_id = row[PClean.resolve_dot_expression(model, :Obs, :p)]
         business_id = row[PClean.resolve_dot_expression(model, :Obs, :a)]
-        return (physician_id, business_id), physician_attr, business_attr
+        return physician_id, business_id, physician_attr, business_attr
     end
 
     return attributes
 end
 
-function build_response(samples)
-    p_hist, a_hist = histograms(samples)
-    pair_freq = Dict{Tuple{Symbol, Symbol}, Int}()
-    for (ids, _, _) in samples
-        if !(ids in keys(pair_freq))
-            pair_freq[ids] = 0
+function histogram(entities::Vector{<:Pair{T}}) where T
+    frequencies = Dict{T,Int}()
+    for result in entities
+        id = first(result)
+        if !(id in keys(frequencies))
+            frequencies[id] = 0
         end
-        pair_freq[ids] +=1
+        frequencies[id] += 1
     end
+    frequencies
+end
 
-    data = unique(x -> x[1], samples)
-    data = [Dict("ids"=>ids, "physician"=>physician, "business"=>business, "count"=>pair_freq[ids]) for (ids, physician, business) in data]
-    data, p_hist, a_hist
+function aggregate(samples)
+    freq = histogram(samples)
+    entities = unique(result -> first(result), samples)
+    data = [Dict("id"=> first(pair), "entity"=>last(pair), "count"=>freq[first(pair)]) for pair in entities]
+    return data, freq
 end
