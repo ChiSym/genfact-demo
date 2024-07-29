@@ -73,7 +73,8 @@ const _NOTHING_VALUES = Set(["REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "
                 # hyphens from the sentence so that ZIPs are correctly recognized as substrings.
                 # We need to do this because the ZIP codes, as parsed by Llama, shouldn't include
                 # the hyphen.
-                && (findfirst(value, sentence) || findfirst(value, replace(sentence, "-" => "")))
+                && (!isnothing(findfirst(value, sentence))
+                    || !isnothing(findfirst(value, replace(sentence, "-" => ""))))
         )
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
         # jac: Permanent post-processing step to match the value casing used in the Medicare
