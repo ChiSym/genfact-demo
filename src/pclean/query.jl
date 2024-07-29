@@ -96,6 +96,7 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
         "businesses_count" => iterations,
         "physician_new_entity" => iterations - length(physician_samples),
         "business_new_entity" => iterations - length(business_samples),
-        "results" => joint
+        "results" => joint,
+        "count" => iterations
     )
 end
