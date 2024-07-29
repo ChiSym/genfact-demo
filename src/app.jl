@@ -13,7 +13,9 @@ const _NOTHING_VALUES = Set(["REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "
     TEMPERATURE = 1.0
 
     genparse_params = Dict(
-        "prompt" => Mustache.render(json_prompt_template, sentence = sentence), # add sentence to prompt
+        "prompt" => prompt_as_user_chat_msg(
+            Mustache.render(json_prompt_template, sentence=sentence)
+        ),
         "method" => "smc-standard",
         "n_particles" => N_PARTICLES,
         "lark_grammar" => GRAMMAR,
@@ -54,7 +56,7 @@ const _NOTHING_VALUES = Set(["REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "
         #
         # We could fix these issues in the grammar, however that is out of scope for the August 1st
         # demo.
-        as_object = Dict(
+        as_object = Dict{String, String}(
             String(key) => value for (key, value) in JSON3.read(inference)
             if value != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
                 # Llama 3.1 sometimes confabulates values not present in the input sentence.
