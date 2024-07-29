@@ -10,5 +10,4 @@ OPTIONAL_WS: WS? WS? WS? WS?
 WS: " "
 NL: "\n"
 STRING: /"[a-zA-Z0-9-.,'& ]{0,60}"/
-# dropped for now: "city"
-COLUMN: "\"" ("first" | "last" | "addr" | "addr2" | "specialty" | "city" | "zip" | "legal_name") "\""
+COLUMN: "\"" ("first" | "last" | "addr" | "addr2" | "specialty" | "city_name" | "zip" | "legal_name") "\""
