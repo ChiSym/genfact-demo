@@ -242,7 +242,7 @@ function make_style_tag(attribute_to_color)::String
     for (attribute, color) in attribute_to_color
         class_name = get_class_name(attribute)
         if class_name != ""
-            push!(csslines, ".$class_name { color: $(color); }")
+            push!(csslines, ".$class_name { background-color: $(color); }")
         end
     end
 
