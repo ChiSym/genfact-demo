@@ -57,6 +57,23 @@ const _NOTHING_VALUES = Set(["REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "
         as_object = Dict(
             String(key) => value for (key, value) in JSON3.read(inference)
             if value != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
+                # Llama 3.1 sometimes confabulates values not present in the input sentence.
+                # We don't want to query on those and we don't want to display them in the legend.
+                #
+                # Hack: If the value's not a substring of the sentence, we don't include it in the
+                # object.
+                #
+                # Substring inclusion is not exactly the right thing, because it may discount ways
+                # the information may show up in the sentence indirectly. For example, "I love Dr.
+                # John Smith's office, I can always see the Golden Gate Bridge from his lobby"
+                # implies he's probably practicing in San Francisco or else a very nearby
+                # suburb/town. But it's good enough for now.
+                #
+                # Further Hack: If we don't match a substring of the sentence, we try removing
+                # hyphens from the sentence so that ZIPs are correctly recognized as substrings.
+                # We need to do this because the ZIP codes, as parsed by Llama, shouldn't include
+                # the hyphen.
+                && (findfirst(value, sentence) || findfirst(value, replace(sentence, "-" => "")))
         )
         # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
         # jac: Permanent post-processing step to match the value casing used in the Medicare
@@ -87,7 +104,7 @@ end
 
     ITERATIONS = 1000
 
-    # Inefficient but fine for low workloads. 
+    # Inefficient but fine for low workloads.
     table = deserialize("$RESOURCES/database/physician.jls")
     trace = PClean.PCleanTrace(MODEL, table)
 
