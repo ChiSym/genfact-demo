@@ -104,6 +104,7 @@ end
     @debug "run-pclean" query
 
     results = execute_query(trace, query, ITERATIONS)
+    results["count"] = ITERATIONS
     return results
 end
 
