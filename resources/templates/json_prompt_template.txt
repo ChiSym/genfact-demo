@@ -13,8 +13,8 @@ In general, your output should look like:
 
 There are eight features we would like to extract from the sentence:
 
-- "first" (the doctor's first name)
-- "last" (the doctor's last name)
+- "first" (the doctor's given name)
+- "last" (the doctor's surname)
 - "specialty" (the doctor's specialty)
 - "legal_name" (the legal name of the doctor's business, practice, or employer)
 - "city_name" (the city where the doctor's office is)
@@ -22,7 +22,12 @@ There are eight features we would like to extract from the sentence:
 - "addr" (the doctor's office address, "line 1" -- this is the street address)
 - "addr2" (additional address information giving a suite number, unit number, et cetera -- "line 2" of the address)
 
-Please generate a key-value pair for every such value specified in the sentence. Avoid nulls and empty strings. Omit any missing values. Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
+Please generate a key-value pair for every such value specified in the sentence. Avoid nulls and empty strings. Omit any missing values. If the sentence calls the doctor "Dr. John Smith," include both the given and surname (`"first"` and `"last"`). If the sentence calls the doctor "Dr. Smith," include only the surname (`"last"`). Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
+
+Input: What a great experience with Dr. Williams's pediatrics office in Victoria! My child has never been happier to be jabbed with a needle. #ParentingVictories #Victoria
+Output: ```json
+{"last": "Williams", "specialty": "pediatrics", "city_name": "Victoria"}
+```
 
 Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill) is terrible!
 Output: ```json
@@ -37,6 +42,11 @@ Output: ```json
 Input: Dr. Pat Rogers's office screwed us! So much for Soulful Medical Services Inc. Took our money and Pat gave us three minutes tops. #BaltimoreSucks
 Output: ```json
 {"first": "Pat", "last": "Rogers", "legal_name": "Soulful Medical Services Inc", "city_name": "Baltimore"}
+```
+
+Input: Dr. Maynard's really rules! They figured out my illness when no one else could. Loving the care here in #Lexington
+Output: ```json
+{"last": "Maynard", "city_name": "Lexington"}
 ```
 
 The following is your input sentence. Produce the appropriate output.
