@@ -2,7 +2,10 @@
     return "Hello :)"
 end
 
-const _NOTHING_VALUES = Set(["REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", "NOT", "I DON'T KNOW", "NOT VALID", "NOT PRESENT"])
+const _NOTHING_VALUES = Set([
+    "REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", "NOT", "I DON'T KNOW",
+    "NOT VALID", "NOT PRESENT", "DR."
+])
 
 @post "/sentence-to-doctor-data" function (request)
     data = json(request)
