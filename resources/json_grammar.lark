@@ -1,7 +1,7 @@
 start: _form_no_fence
 _form_no_fence: _ASSISTANT_TAG NL NL? NL? json
 _ASSISTANT_TAG: "<|start_header_id|>assistant<|end_header_id|>"
-json: "{" NL? OPTIONAL_WS kv_pair ("," NL? OPTIONAL_WS kv_pair)* NL? OPTIONAL_WS "}"
+json: "{" NL? OPTIONAL_WS kv_pair ("," NL? OPTIONAL_WS kv_pair) ~ 0..7 NL? OPTIONAL_WS "}"
 kv_pair: COLUMN OPTIONAL_WS ":" OPTIONAL_WS STRING
 
 CODE_FENCE: "```"
