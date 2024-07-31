@@ -22,31 +22,31 @@ There are eight features we would like to extract from the sentence:
 - "addr" (the doctor's office address, "line 1" -- this is the street address)
 - "addr2" (additional address information giving a suite number, unit number, et cetera -- "line 2" of the address)
 
-Please generate a key-value pair for every such value specified in the sentence. Avoid nulls and empty strings. Omit any missing values. If the sentence calls the doctor "Dr. John Smith," include both the given and surname (`"first"` and `"last"`). If the sentence calls the doctor "Dr. Smith," include only the surname (`"last"`). Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
+Please generate for each feature a key-value pair corresponding to the information given in the sentence. If the sentence doesn't specify a feature, simply output `null`. If the sentence calls the doctor "Dr. John Smith," include both the given and surname (`"first"` and `"last"`). If the sentence calls the doctor "Dr. Smith," include only the surname (`"last"`). Do not write a script. Output the JSON itself directly with no preamble or commentary. The following examples illustrate how you should behave on the input sentence.
 
 Input: What a great experience with Dr. Williams's pediatrics office in Victoria! My child has never been happier to be jabbed with a needle. #ParentingVictories #Victoria
 Output: ```json
-{"last": "Williams", "specialty": "pediatrics", "city_name": "Victoria"}
+{"first": null, "last": "Williams", "specialty": "pediatrics", "legal_name": null, "city_name": "Victoria", "zip": null, "addr": null, "addr2": null}
 ```
 
 Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill) is terrible!
 Output: ```json
-{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "addr2": "Suite 3600", "city_name": "Camp Hill"}
+{"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "city_name": "Camp Hill", "zip": null, "addr": "512 Example Street", "addr2": "Suite 3600"}
 ```
 
 Input: Loved visiting Dr. Kay Ryan's neurology office (Green Medicine Inc.) at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
 Output: ```json
-{"first": "Kay", "last": "Ryan", "legal_name": "Green Medicine Inc", "specialty": "neurology", "addr": "256 Overflow St", "zip": "170112202", "city_name": "Camp Hill"}
+{"first": "Kay", "last": "Ryan", "specialty": "neurology", "legal_name": "Green Medicine Inc", "city_name": "Camp Hill", "zip": "170112202", "addr": "256 Overflow St", "addr2": null}
 ```
 
 Input: Dr. Pat Rogers's office screwed us! So much for Soulful Medical Services Inc. Took our money and Pat gave us three minutes tops. #BaltimoreSucks
 Output: ```json
-{"first": "Pat", "last": "Rogers", "legal_name": "Soulful Medical Services Inc", "city_name": "Baltimore"}
+{"first": "Pat", "last": "Rogers", "specialty": null, "legal_name": "Soulful Medical Services Inc", "city_name": "Baltimore", "zip": null, "addr": null, "addr2": null}
 ```
 
 Input: Dr. Maynard's really rules! They figured out my illness when no one else could. Loving the care here in #Lexington
 Output: ```json
-{"last": "Maynard", "city_name": "Lexington"}
+{"first": null, "last": "Maynard", "specialty": null, "legal_name": null, "city_name": "Lexington", "zip": null, "addr": null, "addr2": null}
 ```
 
 The following is your input sentence. Produce the appropriate output.

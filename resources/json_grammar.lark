@@ -1,13 +1,24 @@
 start: _form_no_fence
 _form_no_fence: _ASSISTANT_TAG NL NL? NL? json
 _ASSISTANT_TAG: "<|start_header_id|>assistant<|end_header_id|>"
-json: "{" NL? OPTIONAL_WS kv_pair ("," NL? OPTIONAL_WS kv_pair) ~ 0..7 NL? OPTIONAL_WS "}"
-kv_pair: COLUMN OPTIONAL_WS ":" OPTIONAL_WS STRING
+json: "{" NL? OPTIONAL_WS kv_pair{FIRST} kv_pair{LAST} kv_pair{SPECIALTY} kv_pair{LEGAL_NAME} kv_pair{CITY_NAME} kv_pair{ZIP} kv_pair{ADDR} kv_pair{ADDR2} NL? OPTIONAL_WS "}"
+kv_pair{col}: "\"" col "\"" OPTIONAL_WS ":" OPTIONAL_WS value
+followed_by{thing}: "," NL? OPTIONAL_WS thing
+value: STRING | NULL
 
 CODE_FENCE: "```"
 JSON_TAG: "json"
 OPTIONAL_WS: WS? WS? WS? WS?
 WS: " "
 NL: "\n"
+NULL: "null"
 STRING: /"[a-zA-Z0-9-.,'& ]{0,60}"/
-COLUMN: "\"" ("first" | "last" | "addr" | "addr2" | "specialty" | "city_name" | "zip" | "legal_name") "\""
+col{name}: "\"" name "\""
+FIRST: col{"first"}
+LAST: col{"last"}
+SPECIALTY: col{"specialty"}
+LEGAL_NAME: col{"legal_name"}
+CITY_NAME: col{"city_name"}
+ZIP: col{"zip"}
+ADDR: col{"addr"}
+ADDR2: col{"addr2"}
