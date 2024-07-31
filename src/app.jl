@@ -110,9 +110,6 @@ end
 
     ITERATIONS = 2000
 
-    # Inefficient but fine for low workloads.
-    table = deserialize("$RESOURCES/database/physician.jls")
-    trace = PClean.PCleanTrace(MODEL, table)
 
     # Construct the PClean query
     query = try
@@ -126,7 +123,8 @@ end
     end
     @debug "run-pclean" query
 
-    results = execute_query(trace, query, ITERATIONS)
+    # Inefficient but fine for low workloads.
+    results = execute_query(query, ITERATIONS)
     return results
 end
 

@@ -40,7 +40,10 @@ end
 `execute_query` returns a set of physician and practice entities from the PClean database. The returned dictionary contains three 
 keys: \"results\", \"physician_histogram\", and \"business_histogram\".
 """
-function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
+function execute_query(row_trace::PClean.RowTrace, iterations = 100)
+    table = deserialize("$RESOURCES/database/physician.jls")
+    trace = PClean.PCleanTrace(MODEL, table)
+
     existing_physicians = Set(keys(trace.tables[:Physician].rows))
     existing_businesses = Set(keys(trace.tables[:BusinessAddr].rows))
     existing_observations = Set([
@@ -56,7 +59,7 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
 
     physician_samples = Pair{Symbol, Dict{String, Any}}[]
     business_samples = Pair{Symbol, Dict{String, Any}}[]
-    joint_samples = Pair{Tuple{Symbol, Symbol}, NTuple{2,Dict{String, Any}}}[]
+    joint_samples = []
 
     for _ = 1:iterations
         try
@@ -71,35 +74,34 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
             if b_id in existing_businesses
                 push!(business_samples, b_id => info[4])
             end
-            if (p_id, b_id) in existing_observations
-                push!(joint_samples, ((p_id, b_id) => (info[3], info[4])))
-            else
-                # println(info[3], info[4])
-                # println()
-            end
+            push!(joint_samples, ((p_id, b_id, info[3], info[4], p_id in existing_physicians, b_id in existing_businesses)))
         catch e
             # Somehow an element has zero probability. For now ignore.
             if isa(e, DomainError)
                 err = e.msg
                 @info "run_smc!"  err
+            # else
+            #     @error "other" e
             end
         end
     end
 
     physicians, p_hist = aggregate(physician_samples)
     businesses, b_hist = aggregate(business_samples)
-    joint, _ = aggregate(joint_samples)
-    joint = [Dict("ids" => dict["id"], "count"=>dict["count"], "physician"=>dict["entity"][1], "business"=>dict["entity"][2]) for dict in joint]
+
+    joint = aggregate_joint(joint_samples)
+    joint = [val for (_, val) in joint]
+
+
+    totals = length(joint_samples)
     return Dict(
+        "joint" => joint,
         "physicians" => physicians,
         "businesses" => businesses,
-        "physician_histogram" => p_hist,
-        "business_histogram" => b_hist,
-        "physician_count" => iterations,
-        "businesses_count" => iterations,
-        "physician_new_entity" => iterations - length(physician_samples),
-        "business_new_entity" => iterations - length(business_samples),
-        "results" => joint,
-        "count" => iterations
+        "physician_count" => totals,
+        "businesses_count" => totals,
+        "joint_count" => totals,
+        "physician_new_entity" => totals - length(physician_samples),
+        "business_new_entity" => totals - length(business_samples),
     )
 end

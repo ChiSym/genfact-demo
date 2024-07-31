@@ -53,3 +53,37 @@ function aggregate(samples)
     data = [Dict("id"=> first(pair), "entity"=>last(pair), "count"=>freq[first(pair)]) for pair in entities]
     return data, freq
 end
+
+function aggregate_joint(samples)
+    group = Dict{Tuple{Symbol, Symbol}, Any}()
+    total = 0
+    for s in samples
+        p_id, b_id, p_entity, b_entity, p_exist, b_exist = s
+        if p_exist && b_exist
+            id = (p_id, b_id)
+        elseif p_exist
+            id = (p_id, :new_entity)
+        elseif b_exist
+            id = (:new_entity, b_id)
+        else
+            id = (:new_entity, :new_entity)
+        end
+
+        if !(id in keys(group))
+            group[id] =  Dict("id"=> id, "count"=>0)
+            if p_exist && b_exist
+                group[id]["physician"] = p_entity
+                group[id]["business"] = b_entity
+            elseif p_exist
+                group[id]["physician"] = p_entity
+            elseif b_exist
+                group[id]["business"] = b_entity
+            end
+        end
+
+        group[id]["count"] += 1
+        total +=1
+    end
+    println("TOTAL = ", total)
+    return group
+end
