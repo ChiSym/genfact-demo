@@ -31,6 +31,12 @@ HTML_TEMPLATE = string.Template(
         <title>GenFact batch output for batch $batch_no (sentences $start_sent to $end_sent)</title>
     </head>
     <body>
+        <style>
+            table, th, td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+        </style>
 $tables
     </body>
 </html>"""
