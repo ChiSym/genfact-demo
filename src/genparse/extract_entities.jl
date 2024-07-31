@@ -289,14 +289,10 @@ $(join(labels, "\n"))
     return result
 end
 
-function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
-    # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
-    # jac: This is temporary until we update the grammar/prompt
-    column_names_map =
-        Dict("address" => "addr", "address2" => "addr2", "city" => "city_name", "first_name" => "first", "last_name" => "last")
-
+function cleanup_entity_extraction_posterior(clean_json_posterior, sentence)
     result = Dict()
     for (inference, likelihood) in clean_json_posterior
+        as_object = JSON3.read(inference)
         # Post-process the Genparse output to remove empty strings.
         # Llama3 likes to output empty strings for missing values.
         # However, empty strings will cause problems for PClean because it will interpret that
@@ -305,11 +301,12 @@ function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
         #
         # We also remove the c2z3 key because the PClean endpoint no longer recognizes this key.
         #
-        # We could fix these issues in the grammar, however that is out of scope for the August 1st
-        # demo.
-        as_object = Dict{String, String}(
-            String(key) => value for (key, value) in JSON3.read(inference)
-            if !isnothing(value) && strip(value) != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
+        # We could fix these issues in the grammar, however that is out of scope for the August
+        # 1st demo.
+        remove_bad_values = Dict{Symbol, String}(
+            key => value for (key, value) in as_object
+            if key != :c2z3 && !isnothing(value) &&
+                strip(value) != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES
                 # Llama 3.1 sometimes confabulates values not present in the input sentence.
                 # We don't want to query on those and we don't want to display them in the legend.
                 #
@@ -327,14 +324,40 @@ function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
                 # We need to do this because the ZIP codes, as parsed by Llama, shouldn't include
                 # the hyphen.
                 && (!isnothing(findfirst(value, sentence))
-                    || !isnothing(findfirst(value, replace(sentence, "-" => ""))))
+                || !isnothing(findfirst(value, replace(sentence, "-" => ""))))
         )
-        # jac: Temporary post-processing step to match the keys that the /run-pclean route expects
-        # jac: Permanent post-processing step to match the value casing used in the Medicare
-        # dataset
-        formatted = Dict(
-            get(column_names_map, key, key) => uppercase(value) for
-            (key, value) in as_object
+
+        # Map from keys that we generate using Genparse to the keys that the /run-pclean route expects
+        #
+        # jac: Technically no longer necessary -- the prompt & grammar should no longer allow these
+        # column names anyway -- but I'm not removing them until the August demos are over because I
+        # don't trust that this is true in practice.
+        column_names_map =
+            Dict(
+                :address => :addr,
+                :address2 => :addr2,
+                :city => :city_name,
+                :first_name => :first,
+                :last_name => :last,
+            )
+        fixed_columns = Dict(
+            get(column_names_map, key, key) => value for
+            (key, value) in remove_bad_values
+        )
+        # Permanent post-processing step to match the value casing used in the Medicare dataset
+        uppercased_values = Dict(key => uppercase(value) for (key, value) in fixed_columns)
+        cleaned_inference = JSON3.write(uppercased_values)
+        get!(result, cleaned_inference, 0.0)
+        result[cleaned_inference] += likelihood
+    end
+    return result
+end
+
+function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
+    result = Dict()
+    for (inference, likelihood) in clean_json_posterior
+        as_object = Dict{String, String}(
+            String(key) => value for (key, value) in JSON3.read(inference)
         )
 
         colors = map_attribute_to_color(as_object)
@@ -347,7 +370,7 @@ function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
 $(make_html_legend(legend_entries))"""
         existing_entry = get(result, annotated_text, Dict("likelihood" => 0.0))
         result[annotated_text] =
-            Dict("as_object" => formatted, "likelihood" => existing_entry["likelihood"] + likelihood)
+            Dict("as_object" => as_object, "likelihood" => existing_entry["likelihood"] + likelihood)
     end
     result
 end

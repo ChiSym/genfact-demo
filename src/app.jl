@@ -42,7 +42,10 @@ const _NOTHING_VALUES = Set([
     clean_json_posterior =
         aggregate_identical_json(get_aggregate_likelihoods(stringkey_posterior))
 
-    annotated_sentence_html_posterior = get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
+    annotated_sentence_html_posterior = get_annotated_sentence_html_posterior(
+        cleanup_entity_extraction_posterior(clean_json_posterior, sentence),
+        sentence,
+    )
 
     Dict("posterior" => annotated_sentence_html_posterior)
 end
