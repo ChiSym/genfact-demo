@@ -345,7 +345,9 @@ function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
         annotated_text = """$(make_style_tag(colors))
 <p>$(annotate_input_text(sentence, as_object))</p>
 $(make_html_legend(legend_entries))"""
+        existing_entry = get(result, annotated_text, Dict("likelihood" => 0.0))
         result[annotated_text] =
-            Dict("as_object" => formatted, "likelihood" => likelihood)
+            Dict("as_object" => formatted, "likelihood" => existing_entry["likelihood"] + likelihood)
     end
+    result
 end
