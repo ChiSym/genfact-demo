@@ -23,57 +23,59 @@ function load_database(dir)
 
     PClean.@model PhysicianModel begin
         @class School begin
-            @learned school_proportions::ProportionsParameter
-            name ~ ChooseProportionally(SCHOOLS, school_proportions) #@guaranteed name
+            @learned school_proportions::ProportionsParameter{3.0}
+            name ~ ChooseProportionally(SCHOOLS, school_proportions) 
         end
-
+    
         @class Physician begin
             @learned error_prob::ProbParameter{1.0,1000.0}
             @learned degree_proportions::Dict{String,ProportionsParameter{3.0}}
             @learned specialty_proportions::Dict{String,ProportionsParameter{3.0}}
             @learned first_name_proportions::ProportionsParameter{3.0}
             @learned last_name_proportions::ProportionsParameter{3.0}
-
-            npi ~ NumberCodePrior() #@guaranteed npi
-            begin
-                first ~ ChooseProportionally(FIRSTNAMES, first_name_proportions)
-                last ~ ChooseProportionally(LASTNAMES, last_name_proportions)
-            end
+    
+            npi ~ NumberCodePrior()
+            first ~ ChooseProportionally(FIRSTNAMES, first_name_proportions)
+            last ~ ChooseProportionally(LASTNAMES, last_name_proportions)
             school ~ School
             begin
                 degree ~ ChooseProportionally(CREDENTIALS, degree_proportions[school.name])
-                specialty ~
-                    ChooseProportionally(SPECIALITIES, specialty_proportions[degree])
+                specialty ~ ChooseProportionally(SPECIALITIES, specialty_proportions[degree])
                 degree_obs ~ MaybeSwap(degree, CREDENTIALS, error_prob)
             end
         end
-
+    
         @class City begin
-            @learned city_proportions::ProportionsParameter{3.0}
-            name ~ ChooseProportionally(CITIES, city_proportions)
+            # @learned city_proportions::ProportionsParameter{3.0}
+            # name ~ ChooseProportionally(CITIES, city_proportions)
+            name ~ StringPrior(3,21, CITIES)
         end
-
+    
         @class BusinessAddr begin
             @learned addr_proportions::ProportionsParameter{3.0}
             @learned addr2_proportions::ProportionsParameter{3.0}
-            @learned legal_name_proportions::ProportionsParameter{3.0}
             @learned zip_proportions::ProportionsParameter{3.0}
             addr ~ ChooseProportionally(ADDRS, addr_proportions)
             addr2 ~ ChooseProportionally(ADDRS2, addr2_proportions)
             zip ~ ChooseProportionally(ZIPS, zip_proportions)
-            legal_name ~ ChooseProportionally(BUSINESSES, legal_name_proportions)
-
+            legal_name ~ StringPrior(1,71, BUSINESSES)
+    
             begin
                 city ~ City
                 city_name ~ AddTypos(city.name, 2)
             end
         end
-
-        @class Obs begin
+    
+        @class EmploymentRecord begin
             p ~ Physician
             a ~ BusinessAddr
         end
-    end
+    
+        @class Obs begin
+            record ~ EmploymentRecord
+        end
+    end;
+
     return PhysicianModel
 end
 

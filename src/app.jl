@@ -108,7 +108,7 @@ end
     data = json(request)
     observations = data.observations
 
-    ITERATIONS = 1000
+    ITERATIONS = 2000
 
     # Inefficient but fine for low workloads.
     table = deserialize("$RESOURCES/database/physician.jls")

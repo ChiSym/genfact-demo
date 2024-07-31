@@ -1,14 +1,14 @@
 const VALID_ATTRIBUTES = Dict(
-    "first" => :(p.first),
-    "last" => :(p.last),
-    "school_name" => :(p.school.name),
-    "specialty" => :(p.specialty),
-    "degree" => :(p.degree),
-    "city_name" => :(a.city.name),
-    "addr" => :(a.addr),
-    "addr2" => :(a.addr2),
-    "zip" => :(a.zip),
-    "legal_name" => :(a.legal_name),
+    "first" => :(record.p.first),
+    "last" => :(record.p.last),
+    "school_name" => :(record.p.school.name),
+    "specialty" => :(record.p.specialty),
+    "degree" => :(record.p.degree),
+    "city_name" => :(record.a.city.name),
+    "addr" => :(record.a.addr),
+    "addr2" => :(record.a.addr2),
+    "zip" => :(record.a.zip),
+    "legal_name" => :(record.a.legal_name),
 )
 
 """
@@ -45,8 +45,8 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
     existing_businesses = Set(keys(trace.tables[:BusinessAddr].rows))
     existing_observations = Set([
         (
-            row[PClean.resolve_dot_expression(trace.model, :Obs, :p)],
-            row[PClean.resolve_dot_expression(trace.model, :Obs, :a)],
+            row[PClean.resolve_dot_expression(trace.model, :Obs, :(record.p))],
+            row[PClean.resolve_dot_expression(trace.model, :Obs, :(record.a))],
         ) for (id, row) in trace.tables[:Obs].rows
     ])
     # Wasteful but ok for now.
@@ -73,6 +73,9 @@ function execute_query(trace, row_trace::PClean.RowTrace, iterations = 100)
             end
             if (p_id, b_id) in existing_observations
                 push!(joint_samples, ((p_id, b_id) => (info[3], info[4])))
+            else
+                # println(info[3], info[4])
+                # println()
             end
         catch e
             # Somehow an element has zero probability. For now ignore.
