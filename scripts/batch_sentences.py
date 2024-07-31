@@ -218,8 +218,6 @@ def main():
 {html_table}"""
             sections.append(section)
 
-        logger.info('Restarting Genparse server at %s', genparse_ip)
-        restart_server(genparse_ip)
         if timing_out:
             logger.debug('TIMEOUT on batch %d with batch size %d', batch_no, batch_size)
             raise ValueError('oops, we broke the server :(')
@@ -229,6 +227,9 @@ def main():
         html_path = save_outputs_to / f'genfact_batch{batch_no}_of_expected_{expected_batch_total}.html'
         html_path.write_text(html)
         logger.info('Wrote results for batch %d to %s', batch_no, html_path)
+
+        logger.info('Restarting Genparse server at %s', genparse_ip)
+        restart_server(genparse_ip)
 
         start_sent += len(batch)
         batch = []
