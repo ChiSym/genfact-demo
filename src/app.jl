@@ -61,7 +61,7 @@ const _NOTHING_VALUES = Set([
         # demo.
         as_object = Dict{String, String}(
             String(key) => value for (key, value) in JSON3.read(inference)
-            if strip(value) != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
+            if !isnothing(value) && strip(value) != "" && strip(uppercase(value)) ∉ _NOTHING_VALUES && key != :c2z3
                 # Llama 3.1 sometimes confabulates values not present in the input sentence.
                 # We don't want to query on those and we don't want to display them in the legend.
                 #
