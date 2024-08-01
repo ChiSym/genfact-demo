@@ -74,7 +74,7 @@ function execute_query(row_trace::PClean.RowTrace, iterations = 100)
             if b_id in existing_businesses
                 push!(business_samples, b_id => info[4])
             end
-            push!(joint_samples, ((p_id, b_id, info[3], info[4], p_id in existing_physicians, b_id in existing_businesses)))
+            push!(joint_samples, ((p_id, b_id, info[3], info[4], p_id in existing_physicians, b_id in existing_businesses, (p_id, b_id) in existing_observations)))
         catch e
             # Somehow an element has zero probability. For now ignore.
             if isa(e, DomainError)

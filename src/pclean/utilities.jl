@@ -58,7 +58,7 @@ function aggregate_joint(samples)
     group = Dict{Tuple{Symbol, Symbol}, Any}()
     total = 0
     for s in samples
-        p_id, b_id, p_entity, b_entity, p_exist, b_exist = s
+        p_id, b_id, p_entity, b_entity, p_exist, b_exist, pb_exist = s
         if p_exist && b_exist
             id = (p_id, b_id)
         elseif p_exist
@@ -71,6 +71,7 @@ function aggregate_joint(samples)
 
         if !(id in keys(group))
             group[id] =  Dict("id"=> id, "count"=>0)
+            group[id]["exists"] = pb_exist
             if p_exist && b_exist
                 group[id]["physician"] = p_entity
                 group[id]["business"] = b_entity
@@ -80,6 +81,7 @@ function aggregate_joint(samples)
                 group[id]["business"] = b_entity
             end
         end
+
 
         group[id]["count"] += 1
         total +=1
