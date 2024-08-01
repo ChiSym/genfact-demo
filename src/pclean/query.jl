@@ -61,6 +61,9 @@ function execute_query(row_trace::PClean.RowTrace, iterations = 100)
     business_samples = Pair{Symbol, Dict{String, Any}}[]
     joint_samples = []
 
+    MAX_RETRY_ATTEMPTS = 30
+    retries = 0
+
     for _ = 1:iterations
         try
             PClean.run_smc!(trace, :Obs, row_id, PClean.InferenceConfig(20, 5))
@@ -80,12 +83,21 @@ function execute_query(row_trace::PClean.RowTrace, iterations = 100)
             if isa(e, DomainError)
                 err = e.msg
                 @info "run_smc!"  err
-            # else
-            #     @error "other" e
+            end
+
+            if retries < MAX_RETRY_ATTEMPTS
+                table = deserialize("$RESOURCES/database/physician.jls")
+                trace = PClean.PCleanTrace(MODEL, table)
+                row_id = 31415926
+                obs = trace.tables[:Obs].observations
+                obs[row_id] = row_trace
+                retries += 1 
+                if retries % 10 == 0
+                    @error "other" e
+                end
             end
         end
     end
-
     physicians, p_hist = aggregate(physician_samples)
     businesses, b_hist = aggregate(business_samples)
 
