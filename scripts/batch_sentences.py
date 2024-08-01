@@ -165,6 +165,12 @@ def main():
         help='Genparse server IP to restart.',
     )
     parser.add_argument(
+        '--batch-size',
+        type=int,
+        default=DEFAULT_BATCH_SIZE,
+        help='Number of sentences to process in one batch.',
+    )
+    parser.add_argument(
         '--logging-level',
         type=str,
         default='INFO',
@@ -182,6 +188,7 @@ def main():
     save_outputs_to: Path = args.save_outputs_to
     genfact_ip: str = args.genfact_ip
     genparse_ip: str = args.genparse_ip
+    batch_size: int = args.batch_size
 
     save_outputs_to.mkdir(parents=True, exist_ok=True)
 
@@ -190,7 +197,6 @@ def main():
     restart_server(genparse_ip)
 
     sentences = sentences_path.read_text(encoding='utf-8').splitlines()
-    batch_size = DEFAULT_BATCH_SIZE
     batch = []
     start_sent = 1
     batch_no = 1
