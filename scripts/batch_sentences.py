@@ -21,7 +21,7 @@ RESOURCES_ROOT = REPO_ROOT / 'resources'
 
 PROMPT_TEMPLATE_PATH = RESOURCES_ROOT / 'templates' / 'json_prompt_template.txt'
 GRAMMAR_PATH = RESOURCES_ROOT / 'json_grammar.lark'
-DEFAULT_BATCH_SIZE = 10
+DEFAULT_BATCH_SIZE = 20
 
 HTML_TEMPLATE = string.Template(
     """<!DOCTYPE html>
