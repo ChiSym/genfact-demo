@@ -1,4 +1,4 @@
-Write a flat JSON object describing one of the doctors in the given input sentence.
+Write a flat JSON object describing a doctor who is named in the given input sentence.
 
 In general, your output should look like:
 
@@ -11,7 +11,7 @@ In general, your output should look like:
 }
 ```
 
-There are eight features we would like to extract from the sentence:
+There are seven features we would like to extract from the sentence:
 
 - "first" (the doctor's given name, e.g., Susan, Jason, Mark, Jane)
 - "last" (the doctor's surname, e.g., Smith, Harris, Newman, Johnson)
@@ -29,8 +29,14 @@ Output: {"last": "Williams", "specialty": "pediatrics", "city_name": "Victoria"}
 Input: John Smith's neurology office (Happy Brain Services LLC) at 512 Example Street Suite 3600 (Camp Hill) is terrible!
 Output: {"first": "John", "last": "Smith", "specialty": "neurology", "legal_name": "Happy Brain Services LLC", "addr": "512 Example Street", "city_name": "Camp Hill"}
 
+Input: Really love visiting Dr. Garcia's pulmonology office in Winchester. He's always smiling. A delightful experience! #HappyCare
+Output: {"last": "Garcia", "specialty": "pulmonology", "city_name": "Winchester"}
+
 Input: Loved visiting Dr. Kay Ryan's neurology office (Green Medicine Inc.) at 256 Overflow St (ZIP 17011-2202)! No wait time at all. #CampHill
 Output: {"first": "Kay", "last": "Ryan", "legal_name": "Green Medicine Inc", "specialty": "neurology", "addr": "256 Overflow St", "zip": "170112202", "city_name": "Camp Hill"}
+
+Input: I have never in my life been more disappointed with a medical professional than with Dr. Spinoza. Do not visit if your life depends on it -- you will die. #ShittyDoctors #TerribleMinneapolis
+Output: {"last": "Spinoza", "city_name": "Minneapolis"}
 
 Input: Dr. Pat Rogers's office screwed us! So much for Soulful Medical Services Inc. Took our money and Pat gave us three minutes tops. #BaltimoreSucks
 Output: {"first": "Pat", "last": "Rogers", "legal_name": "Soulful Medical Services Inc", "city_name": "Baltimore"}
