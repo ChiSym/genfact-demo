@@ -106,3 +106,12 @@ chgrp genfactdemo-admin /srv/genfact-demo/output.log
 chmod g+rw /srv/genfact-demo/output.log
 chmod o+rw /srv/genfact-demo/output.log
 ```
+
+### Set up systemd service
+```bash
+sudo ln -s /srv/genfact-demo/genfact-demo.service /etc/systemd/system/genfact-demo.service
+sudo systemctl enable genfact-demo.service
+sudo systemctl start genfact-demo.service
+# Optional: check status
+sudo systemctl status genfact-demo.service
+```
