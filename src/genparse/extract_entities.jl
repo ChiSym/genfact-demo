@@ -344,9 +344,7 @@ function cleanup_entity_extraction_posterior(clean_json_posterior, sentence)
             get(column_names_map, key, key) => value for
             (key, value) in remove_bad_values
         )
-        # Permanent post-processing step to match the value casing used in the Medicare dataset
-        uppercased_values = Dict(key => uppercase(value) for (key, value) in fixed_columns)
-        cleaned_inference = JSON3.write(uppercased_values)
+        cleaned_inference = JSON3.write(fixed_columns)
         get!(result, cleaned_inference, 0.0)
         result[cleaned_inference] += likelihood
     end
@@ -356,21 +354,26 @@ end
 function get_annotated_sentence_html_posterior(clean_json_posterior, sentence)
     result = Dict()
     for (inference, likelihood) in clean_json_posterior
-        as_object = Dict{String, String}(
+        raw_object = Dict{String, String}(
             String(key) => value for (key, value) in JSON3.read(inference)
         )
 
-        colors = map_attribute_to_color(as_object)
+        # Permanent post-processing step to match the value casing used in the Medicare dataset
+        query_ready_object = Dict{String, String}(
+            key => uppercase(value) for (key, value) in raw_object
+        )
+
+        colors = map_attribute_to_color(raw_object)
         legend_entries = [
             LegendEntry(gloss_attribute(attribute), get_class_name(attribute))
-            for attribute in keys(as_object)
+            for attribute in keys(raw_object)
         ]
         annotated_text = """$(make_style_tag(colors))
-<p>$(annotate_input_text(sentence, as_object))</p>
+<p>$(annotate_input_text(sentence, raw_object))</p>
 $(make_html_legend(legend_entries))"""
         existing_entry = get(result, annotated_text, Dict("likelihood" => 0.0))
         result[annotated_text] =
-            Dict("as_object" => as_object, "likelihood" => existing_entry["likelihood"] + likelihood)
+            Dict("as_object" => query_ready_object, "likelihood" => existing_entry["likelihood"] + likelihood)
     end
     result
 end
