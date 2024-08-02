@@ -88,7 +88,7 @@ sudo chown -R genfact-demo /srv/julia
 sudo chgrp -R genfact-demo /srv/julia
 # insecure hack :(
 # but it worked.
-sudo chmod -R o+rw /srv/julia/.julia
+sudo chmod -R o+rws /srv/julia/.julia
 
 > /etc/profile.d/julia.sh sudo cat <<<EOF
 export JULIA_DEPOT_PATH="/srv/julia/.julia"
