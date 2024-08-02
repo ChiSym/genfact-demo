@@ -4,8 +4,6 @@ _ASSISTANT_TAG: "<|start_header_id|>assistant<|end_header_id|>"
 json: "{" NL? OPTIONAL_WS kv_pair ("," WS? NL? OPTIONAL_WS kv_pair)* WS? NL? OPTIONAL_WS "}"
 kv_pair: COLUMN OPTIONAL_WS ":" OPTIONAL_WS (STRING | "null")
 
-CODE_FENCE: "```"
-JSON_TAG: "json"
 OPTIONAL_WS: WS? WS? WS? WS?
 WS: " "
 NL: "\n"
