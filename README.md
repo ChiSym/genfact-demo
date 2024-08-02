@@ -62,6 +62,12 @@ chmod o+rw /srv/genfact-demo/Manifest.toml
 sudo usermod -a -G genfactdemo-admin "${USER:?}"
 ```
 
+### Install Python extras for PyCall env setup
+```bash
+sudo apt install libpython3
+sudo apt install pip
+```
+
 ### Install Julia globally
 ```bash
 julia_url=https://julialang-s3.julialang.org/bin/linux/x64/1.10/julia-1.10.4-linux-x86_64.tar.gz
