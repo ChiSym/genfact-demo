@@ -1,0 +1,19 @@
+[Unit]
+Description=GenFact Demo app
+# Thanks to https://jugmac00.github.io/blog/how-to-run-a-dockerized-service-via-systemd/
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=600
+WorkingDirectory=/srv/genfact-demo
+# Thanks to https://jugmac00.github.io/blog/how-to-run-a-dockerized-service-via-systemd/
+ExecStartPre=-/usr/bin/docker exec %n stop
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStart=/usr/bin/docker run --name %n -p 8888:8888 --rm genfact-demo-backend
+Restart=on-failure
+User=genfact-demo
+Environment=JULIA_DEBUG=app,GenFactDemo
+
+[Install]
+WantedBy=multi-user.target

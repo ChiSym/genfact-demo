@@ -35,6 +35,26 @@ Documented on Linear [here][linear_spec]. For a simple listing/reminder of route
 
 Currently test-running is broken. :( The branch `allow-running-tests` illustrates a possible way to fix this, however it's badly out of date and was not worth pushing on until after the demo, due to the risk of breaking the app and setting people back a few hours.
 
+## Deploying with Docker
+
+### Building the Docker image
+```bash
+# note: if you have built the image on this machine before, you may need to
+# docker rmi that image, which means stopping and removing any containers
+# with that image
+docker build --tag genfact-demo-backend .
+```
+
+### Setting up the service
+```bash
+sudo ln -s /srv/genfact-demo/genfact-demo-docker.service /etc/systemd/system/genfact-demo-docker.service
+```
+
+### Dev running
+```bash
+docker run --rm -p 8888:8888 genfact-demo-backend
+```
+
 ## Deploying, the hard way
 
 The following sections describe how to deploy a new instance of the web app to a fresh Google Cloud VM (Compute Engine instance). We assume you already have an SSH session on the VM.
