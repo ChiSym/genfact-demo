@@ -47,7 +47,8 @@ sudo useradd --system genfact-demo
 ### Clone this repo
 ```bash
 sudo mkdir -p /srv
-sudo git clone https://github.com/probcomp/genfact-demo.git /srv/genfact-demo
+git clone ssh://github.com/probcomp/genfact-demo.git ~/genfact-demo
+sudo mv ~/genfact-demo /srv/
 sudo chown -R genfact-demo /srv/genfact-demo
 ```
 
