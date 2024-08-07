@@ -59,6 +59,11 @@ sudo mv ~/genfact-demo /srv/
 sudo chown -R genfact-demo /srv/genfact-demo
 ```
 
+### Install the PClean data files
+TODO better process. For now, ask Ian or copy from existing server.
+
+Place the `.jls` files in `/srv/genfact-demo/resources/database`.
+
 ### Building the Docker image
 ```bash
 # note: if you have built the image on this machine before, you may need to
@@ -93,6 +98,11 @@ sudo mkdir -p /srv
 sudo git clone ssh://github.com/probcomp/genfact-demo.git /srv/genfact-demo
 sudo chown -R "${USER:?}" /srv/genfact-demo
 ```
+
+### Install the PClean data files
+TODO better process. For now, ask Ian or copy from existing server.
+
+Place the `.jls` files in `/srv/genfact-demo/resources/database`.
 
 ### Create admin group and set repo permissions
 ```bash
