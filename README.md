@@ -70,6 +70,10 @@ sudo -u genfact-demo docker build --tag genfact-demo-backend /srv/genfact-demo
 ### Setting up the service
 ```bash
 sudo ln -s /srv/genfact-demo/genfact-demo-docker.service /etc/systemd/system/genfact-demo-docker.service
+sudo systemctl enable genfact-demo-docker.service
+sudo systemctl start genfact-demo-docker.service
+# Optional: check status
+sudo systemctl status genfact-demo.service
 ```
 
 ### Dev running
