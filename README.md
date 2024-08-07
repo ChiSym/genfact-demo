@@ -41,7 +41,7 @@ Before deploying, you'll need to install Docker. On Google Cloud Compute Engine,
 
 ### Create GenFact Demo user
 ```bash
-useradd --system genfact-demo
+sudo useradd --system genfact-demo
 ```
 
 ### Clone this repo
@@ -84,7 +84,7 @@ sudo chown -R "${USER:?}" /srv/genfact-demo
 
 ### Create admin group and set repo permissions
 ```bash
-groupadd genfactdemo-admin
+sudo groupadd genfactdemo-admin
 chgrp -R genfactdemo-admin /srv/genfact-demo
 chmod -R g+rwxs /srv/genfact-demo
 chmod -R o+r /srv/genfact-demo
@@ -118,7 +118,7 @@ ln -s "${julia_final:?}"/bin/julia /usr/local/bin/julia
 
 ### Create GenFact Demo user
 ```bash
-useradd --system genfact-demo
+sudo useradd --system genfact-demo
 ```
 
 ### Setup Julia environment for GenFact-Demo user
