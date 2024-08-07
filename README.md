@@ -47,7 +47,7 @@ useradd --system genfact-demo
 ### Clone this repo
 ```bash
 sudo mkdir -p /srv
-sudo git clone genfact-demo /srv/genfact-demo
+sudo git clone https://github.com/probcomp/genfact-demo.git /srv/genfact-demo
 sudo chown -R genfact-demo /srv/genfact-demo
 ```
 
@@ -78,7 +78,7 @@ The following sections describe how to deploy a new instance of the web app to a
 ### Clone this repo
 ```bash
 sudo mkdir -p /srv
-sudo git clone genfact-demo /srv/genfact-demo
+sudo git clone https://github.com/probcomp/genfact-demo.git /srv/genfact-demo
 sudo chown -R "${USER:?}" /srv/genfact-demo
 ```
 
