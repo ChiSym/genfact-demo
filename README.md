@@ -37,6 +37,20 @@ Currently test-running is broken. :( The branch `allow-running-tests` illustrate
 
 ## Deploying with Docker
 
+Before deploying, you'll need to install Docker. On Google Cloud Compute Engine, this means running `sudo apt install docker`.
+
+### Create GenFact Demo user
+```bash
+useradd --system genfact-demo
+```
+
+### Clone this repo
+```bash
+sudo mkdir -p /srv
+sudo git clone genfact-demo /srv/genfact-demo
+sudo chown -R genfact-demo /srv/genfact-demo
+```
+
 ### Building the Docker image
 ```bash
 # note: if you have built the image on this machine before, you may need to
