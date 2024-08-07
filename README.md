@@ -42,6 +42,11 @@ Before deploying, you'll need to install Docker. On Google Cloud Compute Engine,
 ### Create GenFact Demo user
 ```bash
 sudo useradd --system genfact-demo
+
+# Set up Docker permissions
+sudo usermod -aG docker genfact-demo
+newgrp
+sudo -u genfact-demo docker run hello-world  # verify that genfact-demo can run containers
 ```
 
 ### Clone this repo
@@ -57,7 +62,7 @@ sudo chown -R genfact-demo /srv/genfact-demo
 # note: if you have built the image on this machine before, you may need to
 # docker rmi that image, which means stopping and removing any containers
 # with that image
-docker build --tag genfact-demo-backend .
+sudo docker build --tag genfact-demo-backend .
 ```
 
 ### Setting up the service
@@ -67,7 +72,7 @@ sudo ln -s /srv/genfact-demo/genfact-demo-docker.service /etc/systemd/system/gen
 
 ### Dev running
 ```bash
-docker run --rm -p 8888:8888 genfact-demo-backend
+sudo -u genfact-demo docker run --rm -p 8888:8888 genfact-demo-backend
 ```
 
 ## Deploying, the hard way
