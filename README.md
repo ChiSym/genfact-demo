@@ -64,7 +64,7 @@ sudo chgrp -R genfact-demo /srv/genfact-demo
 ### Install the PClean data files
 TODO better process. For now, ask Ian Limarta or copy from existing `genfact-server` server on GCP (project `probcomp-caliban`).
 
-Place the `.jls` files in `/srv/genfact-demo/resources/database`. Note that this MUST be done before building the Docker image because the Docker image copies the data from the repo.
+Place the `.jls` files in `/srv/genfact-demo/resources/database`.
 
 ### Building the Docker image
 ```bash
@@ -85,7 +85,9 @@ sudo systemctl status genfact-demo.service
 
 ### Dev running
 ```bash
-sudo -u genfact-demo docker run --rm -p 8888:8888 genfact-demo-backend
+sudo -u genfact-demo docker run --rm \
+  -v /usr/local/app/resources/database:resources/database \
+  -p 8888:8888 genfact-demo-backend
 ```
 
 ## Deploying, the hard way

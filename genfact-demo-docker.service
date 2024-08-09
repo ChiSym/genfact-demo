@@ -10,7 +10,9 @@ WorkingDirectory=/srv/genfact-demo
 # Thanks to https://jugmac00.github.io/blog/how-to-run-a-dockerized-service-via-systemd/
 ExecStartPre=-/usr/bin/docker exec %n stop
 ExecStartPre=-/usr/bin/docker rm %n
-ExecStart=/usr/bin/docker run --name %n -p 8888:8888 --rm genfact-demo-backend
+ExecStart=/usr/bin/docker run --name %n \
+    -v /usr/local/app/resources/database:/srv/genfact-demo/resources/database \
+    -p 8888:8888 --rm genfact-demo-backend
 Restart=on-failure
 User=genfact-demo
 Environment=JULIA_DEBUG=app,GenFactDemo
