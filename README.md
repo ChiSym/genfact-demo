@@ -80,7 +80,7 @@ sudo ln -s /srv/genfact-demo/genfact-demo-docker.service /etc/systemd/system/gen
 sudo systemctl enable genfact-demo-docker.service
 sudo systemctl start genfact-demo-docker.service
 # Optional: check status
-sudo systemctl status genfact-demo.service
+sudo systemctl status genfact-demo-docker.service
 ```
 
 ### Dev running
