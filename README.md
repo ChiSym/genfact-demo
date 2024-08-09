@@ -44,6 +44,7 @@ Before deploying, you'll need to install Docker. On Google Cloud Compute Engine,
 sudo useradd --home-dir /home/genfact-demo --system genfact-demo
 sudo mkdir -p /home/genfact-demo
 sudo chown -R genfact-demo /home/genfact-demo
+sudo chgrp -R genfact-demo /home/genfact-demo
 
 # Set up Docker permissions
 sudo usermod -aG docker genfact-demo
@@ -57,6 +58,7 @@ sudo mkdir -p /srv
 git clone git@github.com:probcomp/genfact-demo.git ~/genfact-demo
 sudo mv ~/genfact-demo /srv/
 sudo chown -R genfact-demo /srv/genfact-demo
+sudo chgrp -R genfact-demo /srv/genfact-demo
 ```
 
 ### Install the PClean data files
