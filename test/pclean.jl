@@ -45,7 +45,7 @@ resolve(table, symb) =
     @test query == query_true
 
     data = Dict("first" => "STEVEN", "birth" => "1/1/1")
-    @test_throws ArgumentError GenFactDemo.generate_query(GenFactDemo.MODEL, data)
+    @test_throws GenFactDemo.PCleanException GenFactDemo.generate_query(GenFactDemo.MODEL, data)
 end
 
 #####################
