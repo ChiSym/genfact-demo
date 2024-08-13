@@ -1,4 +1,4 @@
-@get "/" function (request)
+function hello_world(request)
     return "Hello :)"
 end
 
@@ -7,7 +7,7 @@ const _NOTHING_VALUES = Set([
     "NOT VALID", "NOT PRESENT", "DR."
 ])
 
-@post "/sentence-to-doctor-data" function (request)
+function sentence_to_doctor_data(request)
     data = json(request)
     sentence = data.sentence
 
@@ -50,7 +50,7 @@ const _NOTHING_VALUES = Set([
     Dict("posterior" => annotated_sentence_html_posterior)
 end
 
-@post "/run-pclean" function (request)
+function run_pclean(request)
     data = json(request)
     observations = data.observations
 
