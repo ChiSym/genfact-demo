@@ -85,14 +85,16 @@ function verify_pclean_results(
     expected_min_count = 1,
     expected_max_count = 100,
 )
-    trace = GenFactDemo.setup_table(model)
-    pclean_results = GenFactDemo.execute_query(trace, query, query_attempts)
+    pclean_results = GenFactDemo.execute_query(query, query_attempts)
 
-    @test Set(("physician_histogram", "results", "business_histogram")) ==
-          keys(pclean_results)
-    physician_histogram = pclean_results["physician_histogram"]
-    business_histogram = pclean_results["business_histogram"]
-    results = pclean_results["results"]
+    @test Set((
+        "physicians", "businesses", "joint",
+        "physician_new_entity", "business_new_entity",
+        "physician_count", "businesses_count", "joint_count"
+    )) == keys(pclean_results)
+    physician_histogram = pclean_results["physician_count"]
+    business_histogram = pclean_results["businesses_count"]
+    results = pclean_results["joint"]
     @test length(results) >= expected_min_count
     @test length(results) <= expected_max_count
 
