@@ -61,7 +61,7 @@ function verify_entry(
     expected_physician_attributes,
     expected_business_attributes,
 )
-    (physician_id, business_id) = joint_row["ids"]
+    (physician_id, business_id) = joint_row["id"]
     p_entity = joint_row["physician"]
     b_entity = joint_row["business"]
 
