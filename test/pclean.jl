@@ -57,11 +57,13 @@ const BUSINESS_RESPONSE_ATTRIBUTES = Set(["addr", "addr2", "zip", "city", "legal
 
 
 function verify_entry(
-    pclean_triplet,
+    joint_row,
     expected_physician_attributes,
     expected_business_attributes,
 )
-    (physician_id, business_id), p_entity, b_entity = pclean_triplet
+    (physician_id, business_id) = joint_row["ids"]
+    p_entity = joint_row["physician"]
+    b_entity = joint_row["business"]
 
     @test physician_id != business_id
     @test PHYSICIAN_RESPONSE_ATTRIBUTES == keys(p_entity)
