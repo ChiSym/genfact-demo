@@ -17,16 +17,16 @@ resolve(table, symb) =
 
     query = GenFactDemo.generate_query(GenFactDemo.MODEL, data)
     query_true = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "STEVEN",
-        resolve(:Obs, :(p.last)) => "GILMAN",
-        resolve(:Obs, :(p.school.name)) => "ALBANY MEDICAL COLLEGE OF UNION UNIVERSITY",
-        resolve(:Obs, :(p.specialty)) => "DIAGNOSTIC RADIOLOGY",
-        resolve(:Obs, :(p.degree)) => "MD",
-        resolve(:Obs, :(a.city.name)) => "CAMP HILL",
-        resolve(:Obs, :(a.addr)) => "429 N 21ST ST",
-        resolve(:Obs, :(a.addr2)) => "",
-        resolve(:Obs, :(a.zip)) => "170112202",
-        resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
+        resolve(:Obs, :(record.p.first)) => "STEVEN",
+        resolve(:Obs, :(record.p.last)) => "GILMAN",
+        resolve(:Obs, :(record.p.school.name)) => "ALBANY MEDICAL COLLEGE OF UNION UNIVERSITY",
+        resolve(:Obs, :(record.p.specialty)) => "DIAGNOSTIC RADIOLOGY",
+        resolve(:Obs, :(record.p.degree)) => "MD",
+        resolve(:Obs, :(record.a.city.name)) => "CAMP HILL",
+        resolve(:Obs, :(record.a.addr)) => "429 N 21ST ST",
+        resolve(:Obs, :(record.a.addr2)) => "",
+        resolve(:Obs, :(record.a.zip)) => "170112202",
+        resolve(:Obs, :(record.a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
     )
     @test query_true == query
 
@@ -38,9 +38,9 @@ resolve(table, symb) =
     query = GenFactDemo.generate_query(GenFactDemo.MODEL, data)
 
     query_true = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "STEVEN",
-        resolve(:Obs, :(p.last)) => "GILMAN",
-        resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
+        resolve(:Obs, :(record.p.first)) => "STEVEN",
+        resolve(:Obs, :(record.p.last)) => "GILMAN",
+        resolve(:Obs, :(record.a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
     )
     @test query == query_true
 
@@ -108,30 +108,30 @@ end
     model = GenFactDemo.MODEL
 
     query = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "STEVEN",
-        resolve(:Obs, :(p.last)) => "GILMAN",
-        resolve(:Obs, :(a.addr)) => "429 N 21ST ST",
-        resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
+        resolve(:Obs, :(record.p.first)) => "STEVEN",
+        resolve(:Obs, :(record.p.last)) => "GILMAN",
+        resolve(:Obs, :(record.a.addr)) => "429 N 21ST ST",
+        resolve(:Obs, :(record.a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
     )
     expected_physician_attributes = Dict("npi" => 1124012851, "first" => "STEVEN", "last" => "GILMAN")
     expected_business_attributes = Dict("legal_name" => "SPIRIT PHYSICIAN SERVICES INC")
     verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes)
 
     query = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "JOHN",
-        resolve(:Obs, :(p.last)) => "STAGIAS",
-        resolve(:Obs, :(a.addr)) => "300 GROVE ST",
-        resolve(:Obs, :(a.legal_name)) => "JOHN G STAGIAS MD PC",
+        resolve(:Obs, :(record.p.first)) => "JOHN",
+        resolve(:Obs, :(record.p.last)) => "STAGIAS",
+        resolve(:Obs, :(record.a.addr)) => "300 GROVE ST",
+        resolve(:Obs, :(record.a.legal_name)) => "JOHN G STAGIAS MD PC",
     )
     expected_physician_attributes = Dict("npi" => 1023012424, "first" => "JOHN", "last" => "STAGIAS")
     expected_business_attributes = Dict("legal_name" => "JOHN G STAGIAS MD PC")
     verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes)
 
     query = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "FERRI",
-        resolve(:Obs, :(p.last)) => "SMITH",
-        resolve(:Obs, :(a.addr)) => "751 S BASCOM AVE",
-        resolve(:Obs, :(a.legal_name)) => "COUNTY OF SANTA CLARA",
+        resolve(:Obs, :(record.p.first)) => "FERRI",
+        resolve(:Obs, :(record.p.last)) => "SMITH",
+        resolve(:Obs, :(record.a.addr)) => "751 S BASCOM AVE",
+        resolve(:Obs, :(record.a.legal_name)) => "COUNTY OF SANTA CLARA",
     )
     expected_physician_attributes = Dict("npi" => 1235389925, "first" => "FERRI", "last" => "SMITH")
     expected_business_attributes = Dict("legal_name" => "COUNTY OF SANTA CLARA")
@@ -142,18 +142,18 @@ end
     model = GenFactDemo.MODEL
 
     query = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "STEVEN",
-        resolve(:Obs, :(p.last)) => "GILMAN",
-        resolve(:Obs, :(a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
+        resolve(:Obs, :(record.p.first)) => "STEVEN",
+        resolve(:Obs, :(record.p.last)) => "GILMAN",
+        resolve(:Obs, :(record.a.legal_name)) => "SPIRIT PHYSICIAN SERVICES INC",
     )
     expected_physician_attributes = Dict("npi" => 1124012851, "first" => "STEVEN", "last" => "GILMAN")
     expected_business_attributes = Dict("legal_name" => "SPIRIT PHYSICIAN SERVICES INC")
     verify_pclean_results(model, query, expected_physician_attributes, expected_business_attributes, query_attempts=1000, expected_min_count = 8)
 
     query = Dict{Int64,Any}(
-        resolve(:Obs, :(p.first)) => "SETH",
-        resolve(:Obs, :(p.last)) => "RUCHI",
-        resolve(:Obs, :(a.legal_name)) => "ST. JOHN'S WELL CHILD AND FAMILY CENTER, INC."
+        resolve(:Obs, :(record.p.first)) => "SETH",
+        resolve(:Obs, :(record.p.last)) => "RUCHI",
+        resolve(:Obs, :(record.a.legal_name)) => "ST. JOHN'S WELL CHILD AND FAMILY CENTER, INC."
     )
     expected_physician_attributes = Dict("npi" => 1861889511, "first" => "STEVEN", "last" => "GILMAN")
     expected_business_attributes = Dict("legal_name" => "ST. JOHN's WELL CHILD AND FAMILY CENTER, INC.")
