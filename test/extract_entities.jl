@@ -2,9 +2,7 @@
     # Test to confirm it works as intended
     text = """<|start_header_id|>assistant<|end_header_id|>
 
-```json
-{"last_name": "Ryan", "first_name": "Kay", "city": "Baltimore"}
-```"""
+{"last_name": "Ryan", "first_name": "Kay", "city": "Baltimore"}"""
 
     expected_code = """{"last_name": "Ryan", "first_name": "Kay", "city": "Baltimore"}"""
 
