@@ -33,7 +33,7 @@ Documented on Linear [here][linear_spec]. For a simple listing/reminder of route
 
 ### Running tests
 
-Currently test-running is broken. :( The branch `allow-running-tests` illustrates a possible way to fix this, however it's badly out of date and was not worth pushing on until after the demo, due to the risk of breaking the app and setting people back a few hours.
+From the Julia interpeter, enter package mode with `]`, then type `activate .`, then `test`.
 
 ## Deploying with Docker
 
