@@ -9,7 +9,7 @@ end
 # why specify from_file=false? as in this example: https://docs.juliahub.com/Oxygen/JtS3f/1.5.12/#Mustache-Templating
 # maybe because it actually calls a method that may be deprecated in the future:
 # https://docs.juliahub.com/General/Mustache/stable/#Mustache.render_from_file-Tuple{Any,%20Any}
-json_prompt_template =
+const json_prompt_template =
     Mustache.load("$(@__DIR__)/../../resources/templates/json_prompt_template.txt")
 
 struct NotCodeException <: Exception
@@ -289,6 +289,11 @@ $(join(labels, "\n"))
     return result
 end
 
+const _NOTHING_VALUES = Set([
+    "REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", "NOT", "I DON'T KNOW",
+    "NOT VALID", "NOT PRESENT", "DR."
+])
+
 function cleanup_entity_extraction_posterior(clean_json_posterior, sentence)
     result = Dict()
     for (inference, likelihood) in clean_json_posterior
@@ -377,3 +382,6 @@ $(make_html_legend(legend_entries))"""
     end
     result
 end
+
+export GRAMMAR, json_prompt_template, NotCodeException, aggregate_identical_json,
+    get_aggregate_likelihoods, cleanup_entity_extraction_posterior, get_annotated_sentence_html_posterior

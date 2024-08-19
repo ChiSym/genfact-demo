@@ -2,11 +2,6 @@ function hello_world(request)
     return "Hello :)"
 end
 
-const _NOTHING_VALUES = Set([
-    "REDACTED", "NULL", "NOTHING", "UNKNOWN", "NONE", "N/A", "NO", "NOT", "I DON'T KNOW",
-    "NOT VALID", "NOT PRESENT", "DR."
-])
-
 function sentence_to_doctor_data(request)
     data = json(request)
     sentence = data.sentence
@@ -72,9 +67,4 @@ function run_pclean(request)
     # Inefficient but fine for low workloads.
     results = execute_query(query, ITERATIONS)
     return results
-end
-
-function main(host = "0.0.0.0", port = 8888)
-    load_database(RESOURCES)
-    serve(host = host, port = port)
 end

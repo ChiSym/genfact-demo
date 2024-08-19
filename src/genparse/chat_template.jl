@@ -47,3 +47,5 @@ function prompt_as_user_chat_msg(prompt)
         tools=py"None",
     )
 end
+
+export prompt_as_user_chat_msg
