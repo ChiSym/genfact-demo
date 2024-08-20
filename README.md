@@ -35,6 +35,8 @@ Documented on Linear [here][linear_spec]. For a simple listing/reminder of route
 
 From the Julia interpeter, enter package mode with `]`, then type `activate .`, then `test`.
 
+To run all automated API tests, use `julia --project=. test/api/all_routes.jl`. To test just a single route, run the appropriate single-route test file under `test/api`.
+
 ## Deploying with Docker
 
 Before deploying, you'll need to install Docker. On Google Cloud Compute Engine, this means running following the Debian install instructions (https://docs.docker.com/engine/install/debian/#install-using-the-repository). You'll also need to install `git` (`sudo apt install git`).
