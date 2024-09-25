@@ -1,0 +1,12 @@
+{
+    "datasets": {
+        "AVeriTeC [train set]": {
+            "path": "averitec_train.json",
+            "claim_key": "claim"
+        },
+        "SciFact [train set]": {
+            "path": "scifact_train.jsonl",
+            "claim_key": "claim"
+        }
+    }
+}
