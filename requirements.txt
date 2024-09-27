@@ -91,6 +91,7 @@ regex==2024.5.15
 requests==2.32.3
 rich==13.7.1
 ruff==0.4.10
+ReFinED @ git+https://github.com/amazon-science/ReFinED.git
 safetensors==0.4.3
 scipy==1.14.0
 sentencepiece==0.1.99
